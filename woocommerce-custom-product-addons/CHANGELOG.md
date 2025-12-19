@@ -5,6 +5,23 @@ All notable changes to the WooCommerce Custom Product Add-ons plugin will be doc
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.0] - 2024-12-19
+
+### Changed
+- **Section Order**: "Información adicional" now appears BEFORE "Personaliza tu pedido"
+- **Required Fields**: All text fields are now required except "Observaciones"
+- **Styling Update**: Complete CSS redesign with custom brand colors (#c34591)
+  - Removed dark theme support
+  - Updated to use brand pink color (#c34591) for borders and accents
+  - Changed font weights to 800 for bold headings
+  - Updated background to white (#fff)
+  - Border radius set to 0 for sharper corners
+  - Required field indicator (*) in brand pink color
+
+### Fixed
+- Text field validation now enforced on frontend
+- Consistent styling across all form elements
+
 ## [1.2.0] - 2024-12-19
 
 ### Added

@@ -5,22 +5,23 @@
 
 /* Main wrapper */
 .wc-custom-addons-wrapper {
-    background: #f9f9f9;
+    background: #fff;
     border: 1px solid #e1e1e1;
-    border-radius: 4px;
-    padding: 20px;
-    margin: 20px 0;
+    border-radius: 0;
+    padding: 10px;
+    margin: 0;
     clear: both;
 }
 
 /* Title */
 .wc-custom-addons-title {
     font-size: 18px;
-    font-weight: 600;
+    font-weight: 800;
     margin: 0 0 15px 0;
-    color: #333;
-    border-bottom: 2px solid #0073aa;
+    color: #202020;
+    border-bottom: 2px solid #c34591;
     padding-bottom: 10px;
+    text-transform: uppercase;
 }
 
 /* Individual addon field */
@@ -38,11 +39,11 @@
 /* Labels */
 .wc-custom-addon-field label {
     flex: 1 1 60%;
-    font-weight: 600;
+    font-weight: 800;
     font-size: 14px;
     margin: 0;
     margin-bottom: 5px;
-    color: #333;
+    color: #202020;
     display: flex;
     align-items: center;
     flex-wrap: wrap;
@@ -50,9 +51,9 @@
 
 /* Price display in label */
 .wc-addon-price {
-    font-weight: 400;
-    font-size: 13px;
-    color: #777;
+    font-weight: 800;
+    font-size: 15px;
+    color: #202020;
     margin-left: 8px;
 }
 
@@ -69,9 +70,9 @@
 }
 
 .wc-custom-addon-qty:focus {
-    border-color: #0073aa;
+    border-color: #c34591;
     outline: none;
-    box-shadow: 0 0 0 1px #0073aa;
+    box-shadow: 0 0 0 1px #c34591;
 }
 
 /* Total display */
@@ -88,12 +89,12 @@
 }
 
 .wc-custom-addons-total strong {
-    color: #333;
+    color: #202020;
 }
 
 .wc-addons-total-price {
-    color: #0073aa;
-    font-weight: 600;
+    color: #c34591;
+    font-weight: 800;
     font-size: 18px;
 }
 
@@ -103,17 +104,17 @@
         flex-direction: column;
         align-items: flex-start;
     }
-    
+
     .wc-custom-addon-field label {
         margin-bottom: 8px;
         width: 100%;
     }
-    
+
     .wc-custom-addon-qty {
         width: 100%;
         max-width: 100%;
     }
-    
+
     .wc-custom-addons-total {
         flex-direction: column;
         align-items: flex-start;
@@ -125,11 +126,11 @@
     .wc-custom-addons-wrapper {
         padding: 15px;
     }
-    
+
     .wc-custom-addons-title {
         font-size: 16px;
     }
-    
+
     .wc-addon-price {
         display: block;
         margin-left: 0;
@@ -166,54 +167,9 @@
     margin: 0;
 }
 
-/* Dark mode support (optional) */
-@media (prefers-color-scheme: dark) {
-    .wc-custom-addons-wrapper {
-        background: #2a2a2a;
-        border-color: #444;
-    }
-    
-    .wc-custom-addons-title {
-        color: #fff;
-        border-bottom-color: #0073aa;
-    }
-    
-    .wc-custom-addon-field label {
-        color: #ddd;
-    }
-    
-    .wc-addon-price {
-        color: #aaa;
-    }
-    
-    .wc-custom-addon-qty {
-        background: #333;
-        color: #fff;
-        border-color: #555;
-    }
-    
-    .wc-custom-addons-total {
-        background: #333;
-        border-color: #555;
-    }
-    
-    .wc-custom-addons-total strong {
-        color: #fff;
-    }
-}
-
 /* Custom Text Fields Section */
 .wc-custom-text-fields {
-    margin-top: 20px;
-    padding-top: 20px;
-    border-top: 1px solid #e1e1e1;
-}
-
-.wc-custom-text-fields-title {
-    font-size: 16px;
-    font-weight: 600;
-    margin: 0 0 15px 0;
-    color: #333;
+    margin-bottom: 20px;
 }
 
 .wc-custom-text-field {
@@ -222,10 +178,15 @@
 
 .wc-custom-text-field label {
     display: block;
-    font-weight: 600;
+    font-weight: 800;
     font-size: 14px;
     margin-bottom: 5px;
-    color: #333;
+    color: #202020;
+}
+
+.wc-custom-text-field label .required {
+    color: #c34591;
+    font-weight: 800;
 }
 
 .wc-custom-text-input {
@@ -238,24 +199,7 @@
 }
 
 .wc-custom-text-input:focus {
-    border-color: #0073aa;
+    border-color: #c34591;
     outline: none;
-    box-shadow: 0 0 0 1px #0073aa;
-}
-
-/* Dark mode support for text fields */
-@media (prefers-color-scheme: dark) {
-    .wc-custom-text-fields-title {
-        color: #fff;
-    }
-    
-    .wc-custom-text-field label {
-        color: #ddd;
-    }
-    
-    .wc-custom-text-input {
-        background: #333;
-        color: #fff;
-        border-color: #555;
-    }
+    box-shadow: 0 0 0 1px #c34591;
 }

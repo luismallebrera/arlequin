@@ -3,7 +3,7 @@
  * Plugin Name: WooCommerce Custom Product Add-ons
  * Plugin URI: https://github.com/luismallebrera/arlequin
  * Description: Adds custom quantity-based add-on fields and custom text fields to WooCommerce product pages with per-product control. Includes event fields for baptisms, communions, and more.
- * Version: 1.2.0
+ * Version: 1.3.0
  * Author: Luis Mallebrera
  * Author URI: https://github.com/luismallebrera
  * Text Domain: wc-custom-addons
@@ -22,7 +22,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 // Define plugin constants
-define( 'WC_CUSTOM_ADDONS_VERSION', '1.2.0' );
+define( 'WC_CUSTOM_ADDONS_VERSION', '1.3.0' );
 define( 'WC_CUSTOM_ADDONS_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'WC_CUSTOM_ADDONS_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 
@@ -247,9 +247,37 @@ class WC_Custom_Product_Addons {
         
         ?>
         <div class="wc-custom-addons-wrapper">
-            <h3 class="wc-custom-addons-title"><?php esc_html_e( 'Personaliza tu pedido', 'wc-custom-addons' ); ?></h3>
+            
+            <?php if ( ! empty( $enabled_text_fields ) ) : ?>
+            <div class="wc-custom-text-fields">
+                <h3 class="wc-custom-addons-title"><?php esc_html_e( 'Información adicional', 'wc-custom-addons' ); ?></h3>
+                
+                <?php foreach ( $enabled_text_fields as $field_key => $field_label ) : 
+                    // Observaciones is not required, all others are
+                    $is_required = ( $field_key !== 'observaciones' );
+                ?>
+                <div class="wc-custom-text-field">
+                    <label for="text_field_<?php echo esc_attr( $field_key ); ?>">
+                        <?php echo esc_html( $field_label ); ?>
+                        <?php if ( $is_required ) : ?>
+                            <span class="required">*</span>
+                        <?php endif; ?>
+                    </label>
+                    <input type="text" 
+                           id="text_field_<?php echo esc_attr( $field_key ); ?>" 
+                           name="text_field_<?php echo esc_attr( $field_key ); ?>" 
+                           class="wc-custom-text-input" 
+                           value="" 
+                           placeholder="<?php echo esc_attr( $field_label ); ?>"
+                           <?php echo $is_required ? 'required' : ''; ?> />
+                </div>
+                <?php endforeach; ?>
+            </div>
+            <?php endif; ?>
             
             <?php if ( $enable_addons === 'yes' ) : ?>
+            <h3 class="wc-custom-addons-title"><?php esc_html_e( 'Personaliza tu pedido', 'wc-custom-addons' ); ?></h3>
+            
             <div class="wc-custom-addon-field">
                 <label for="addon_pulseras">
                     <?php esc_html_e( 'AÑADIR PULSERAS', 'wc-custom-addons' ); ?>
@@ -301,26 +329,6 @@ class WC_Custom_Product_Addons {
             <div class="wc-custom-addons-total">
                 <strong><?php esc_html_e( 'Coste adicional:', 'wc-custom-addons' ); ?></strong>
                 <span class="wc-addons-total-price"><?php echo wc_price( 0 ); ?></span>
-            </div>
-            <?php endif; ?>
-            
-            <?php if ( ! empty( $enabled_text_fields ) ) : ?>
-            <div class="wc-custom-text-fields">
-                <h4 class="wc-custom-text-fields-title"><?php esc_html_e( 'Información adicional', 'wc-custom-addons' ); ?></h4>
-                
-                <?php foreach ( $enabled_text_fields as $field_key => $field_label ) : ?>
-                <div class="wc-custom-text-field">
-                    <label for="text_field_<?php echo esc_attr( $field_key ); ?>">
-                        <?php echo esc_html( $field_label ); ?>
-                    </label>
-                    <input type="text" 
-                           id="text_field_<?php echo esc_attr( $field_key ); ?>" 
-                           name="text_field_<?php echo esc_attr( $field_key ); ?>" 
-                           class="wc-custom-text-input" 
-                           value="" 
-                           placeholder="<?php echo esc_attr( $field_label ); ?>" />
-                </div>
-                <?php endforeach; ?>
             </div>
             <?php endif; ?>
         </div>
