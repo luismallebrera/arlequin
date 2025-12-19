@@ -162,8 +162,19 @@ class WC_Custom_Product_Addons {
      * Save product settings
      */
     public function save_product_settings( $post_id ) {
+        // Check user capabilities
+        if ( ! current_user_can( 'edit_product', $post_id ) ) {
+            return;
+        }
+        
+        // Check nonce (WooCommerce handles this in woocommerce_process_product_meta hook)
+        if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+            return;
+        }
+        
+        // Sanitize and save the checkbox value
         $enable_addons = isset( $_POST['_enable_custom_addons'] ) ? 'yes' : 'no';
-        update_post_meta( $post_id, '_enable_custom_addons', $enable_addons );
+        update_post_meta( $post_id, '_enable_custom_addons', sanitize_text_field( $enable_addons ) );
     }
     
     /**
