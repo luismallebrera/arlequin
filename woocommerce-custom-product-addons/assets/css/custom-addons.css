@@ -1,0 +1,202 @@
+/**
+ * WooCommerce Custom Product Add-ons - Styles
+ * Professional styling for custom add-on fields
+ */
+
+/* Main wrapper */
+.wc-custom-addons-wrapper {
+    background: #f9f9f9;
+    border: 1px solid #e1e1e1;
+    border-radius: 4px;
+    padding: 20px;
+    margin: 20px 0;
+    clear: both;
+}
+
+/* Title */
+.wc-custom-addons-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0 0 15px 0;
+    color: #333;
+    border-bottom: 2px solid #0073aa;
+    padding-bottom: 10px;
+}
+
+/* Individual addon field */
+.wc-custom-addon-field {
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.wc-custom-addon-field:last-of-type {
+    margin-bottom: 20px;
+}
+
+/* Labels */
+.wc-custom-addon-field label {
+    flex: 1 1 60%;
+    font-weight: 600;
+    font-size: 14px;
+    margin: 0;
+    color: #555;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+/* Price display in label */
+.wc-addon-price {
+    font-weight: 400;
+    font-size: 13px;
+    color: #777;
+    margin-left: 8px;
+}
+
+/* Quantity input */
+.wc-custom-addon-qty {
+    flex: 0 0 100px;
+    max-width: 100px;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    font-size: 14px;
+    text-align: center;
+    transition: border-color 0.3s ease;
+}
+
+.wc-custom-addon-qty:focus {
+    border-color: #0073aa;
+    outline: none;
+    box-shadow: 0 0 0 1px #0073aa;
+}
+
+/* Total display */
+.wc-custom-addons-total {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    padding: 12px 15px;
+    margin-top: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 16px;
+}
+
+.wc-custom-addons-total strong {
+    color: #333;
+}
+
+.wc-addons-total-price {
+    color: #0073aa;
+    font-weight: 600;
+    font-size: 18px;
+}
+
+/* Responsive design */
+@media screen and (max-width: 768px) {
+    .wc-custom-addon-field {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .wc-custom-addon-field label {
+        margin-bottom: 8px;
+        width: 100%;
+    }
+    
+    .wc-custom-addon-qty {
+        width: 100%;
+        max-width: 100%;
+    }
+    
+    .wc-custom-addons-total {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .wc-custom-addons-wrapper {
+        padding: 15px;
+    }
+    
+    .wc-custom-addons-title {
+        font-size: 16px;
+    }
+    
+    .wc-addon-price {
+        display: block;
+        margin-left: 0;
+        margin-top: 4px;
+    }
+}
+
+/* WooCommerce compatibility */
+.single-product .wc-custom-addons-wrapper {
+    width: 100%;
+}
+
+/* Animation for price updates */
+.wc-addons-total-price,
+.woocommerce-Price-amount.amount {
+    transition: color 0.2s ease;
+}
+
+/* Spinner buttons for number input (Chrome, Safari, Edge) */
+.wc-custom-addon-qty::-webkit-inner-spin-button,
+.wc-custom-addon-qty::-webkit-outer-spin-button {
+    opacity: 1;
+    height: 30px;
+}
+
+/* Firefox number input */
+.wc-custom-addon-qty[type=number] {
+    -moz-appearance: textfield;
+}
+
+.wc-custom-addon-qty::-webkit-inner-spin-button,
+.wc-custom-addon-qty::-webkit-outer-spin-button {
+    -webkit-appearance: inner-spin-button;
+    margin: 0;
+}
+
+/* Dark mode support (optional) */
+@media (prefers-color-scheme: dark) {
+    .wc-custom-addons-wrapper {
+        background: #2a2a2a;
+        border-color: #444;
+    }
+    
+    .wc-custom-addons-title {
+        color: #fff;
+        border-bottom-color: #0073aa;
+    }
+    
+    .wc-custom-addon-field label {
+        color: #ddd;
+    }
+    
+    .wc-addon-price {
+        color: #aaa;
+    }
+    
+    .wc-custom-addon-qty {
+        background: #333;
+        color: #fff;
+        border-color: #555;
+    }
+    
+    .wc-custom-addons-total {
+        background: #333;
+        border-color: #555;
+    }
+    
+    .wc-custom-addons-total strong {
+        color: #fff;
+    }
+}
