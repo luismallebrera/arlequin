@@ -1,0 +1,206 @@
+/**
+ * WooCommerce Custom Product Add-ons - Styles
+ * Professional styling for custom add-on fields
+ */
+
+/* Main wrapper */
+.wc-custom-addons-wrapper {
+    background: #fff;
+    border: 1px solid #e1e1e1;
+    border-radius: 0;
+    padding: 10px;
+    margin: 0;
+    clear: both;
+}
+
+/* Title */
+.wc-custom-addons-title {
+    font-size: 18px;
+    font-weight: 800;
+    margin: 0 0 15px 0;
+    color: #202020;
+    border-bottom: 2px solid #c34591;
+    padding-bottom: 10px;
+    text-transform: uppercase;
+}
+
+/* Individual addon field */
+.wc-custom-addon-field {
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.wc-custom-addon-field:last-of-type {
+    margin-bottom: 20px;
+}
+
+/* Labels */
+.wc-custom-addon-field label {
+    flex: 1 1 60%;
+    font-weight: 800;
+    font-size: 14px;
+    margin: 0;
+    margin-bottom: 5px;
+    color: #202020;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+/* Price display in label */
+.wc-addon-price {
+    font-weight: 800;
+    font-size: 15px;
+    color: #202020;
+    margin-left: 8px;
+}
+
+/* Quantity input */
+.wc-custom-addon-qty {
+    flex: 0 0 100px;
+    max-width: 100px;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    font-size: 14px;
+    text-align: center;
+    transition: border-color 0.3s ease;
+}
+
+.wc-custom-addon-qty:focus {
+    border-color: #c34591;
+    outline: none;
+    box-shadow: 0 0 0 1px #c34591;
+}
+
+/* Total display */
+.wc-custom-addons-total {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    padding: 12px 15px;
+    margin-top: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 16px;
+}
+
+.wc-custom-addons-total strong {
+    color: #202020;
+}
+
+.wc-addons-total-price {
+    color: #c34591;
+    font-weight: 800;
+    font-size: 18px;
+}
+
+/* Responsive design */
+@media screen and (max-width: 768px) {
+    .wc-custom-addon-field {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .wc-custom-addon-field label {
+        margin-bottom: 8px;
+        width: 100%;
+    }
+
+    .wc-custom-addon-qty {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .wc-custom-addons-total {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .wc-custom-addons-wrapper {
+        padding: 15px;
+    }
+
+    .wc-custom-addons-title {
+        font-size: 16px;
+    }
+
+    .wc-addon-price {
+        display: block;
+        margin-left: 0;
+        margin-top: 4px;
+    }
+}
+
+/* WooCommerce compatibility */
+.single-product .wc-custom-addons-wrapper {
+    width: 100%;
+}
+
+/* Animation for price updates */
+.wc-addons-total-price,
+.woocommerce-Price-amount.amount {
+    transition: color 0.2s ease;
+}
+
+/* Spinner buttons for number input (Chrome, Safari, Edge) */
+.wc-custom-addon-qty::-webkit-inner-spin-button,
+.wc-custom-addon-qty::-webkit-outer-spin-button {
+    opacity: 1;
+    height: 30px;
+}
+
+/* Firefox number input */
+.wc-custom-addon-qty[type=number] {
+    -moz-appearance: textfield;
+}
+
+.wc-custom-addon-qty::-webkit-inner-spin-button,
+.wc-custom-addon-qty::-webkit-outer-spin-button {
+    -webkit-appearance: inner-spin-button;
+    margin: 0;
+}
+
+/* Custom Text Fields Section */
+.wc-custom-text-fields {
+    margin-bottom: 20px;
+}
+
+.wc-custom-text-field {
+    margin-bottom: 7px;
+}
+
+.wc-custom-text-field label {
+    display: block;
+    font-weight: 800;
+    font-size: 14px;
+    margin-bottom: 5px;
+    color: #202020;
+}
+
+.wc-custom-text-field label .required {
+    color: #c34591;
+    font-weight: 800;
+}
+
+.wc-custom-text-input {
+    width: 100%;
+    padding: 7px 12px !important;
+    border: 1px solid #e1e1e1 !important;
+    border-radius: 3px;
+    font-size: 17px;
+    transition: border-color 0.3s ease;
+    margin-bottom: 0px !important;
+}
+
+.wc-custom-text-input:focus {
+    border-color: #c34591;
+    outline: none;
+    box-shadow: 0 0 0 1px #c34591;
+}
