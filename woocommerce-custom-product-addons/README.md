@@ -70,14 +70,12 @@ Three pre-configured add-on options that can be enabled per product:
 4. The enabled fields will now appear on that product's page
 
 **Note**: All fields are disabled by default. You must explicitly enable them per product.
-5. The add-on fields will now appear on that product's page
-
-**Note**: Add-ons are disabled by default for all products. You must explicitly enable them per product.
 
 ### For Customers
 
-1. Navigate to a product page where add-ons are enabled
-2. Select quantities for desired add-ons using the number inputs
+1. Navigate to a product page where fields are enabled
+2. Select quantities for add-ons (if enabled)
+3. Fill in text fields (if enabled)
 3. Watch the price update automatically
 4. Add the product to cart
 5. Review add-ons in cart, checkout, and order confirmation

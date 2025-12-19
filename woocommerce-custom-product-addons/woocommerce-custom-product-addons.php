@@ -306,9 +306,7 @@ class WC_Custom_Product_Addons {
             
             <?php if ( ! empty( $enabled_text_fields ) ) : ?>
             <div class="wc-custom-text-fields">
-                <?php if ( $enable_addons === 'yes' ) : ?>
-                    <h4 class="wc-custom-text-fields-title"><?php esc_html_e( 'Información adicional', 'wc-custom-addons' ); ?></h4>
-                <?php endif; ?>
+                <h4 class="wc-custom-text-fields-title"><?php esc_html_e( 'Información adicional', 'wc-custom-addons' ); ?></h4>
                 
                 <?php foreach ( $enabled_text_fields as $field_key => $field_label ) : ?>
                 <div class="wc-custom-text-field">
