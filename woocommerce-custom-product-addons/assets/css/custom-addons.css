@@ -201,3 +201,61 @@
         color: #fff;
     }
 }
+
+/* Custom Text Fields Section */
+.wc-custom-text-fields {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #e1e1e1;
+}
+
+.wc-custom-text-fields-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0 0 15px 0;
+    color: #333;
+}
+
+.wc-custom-text-field {
+    margin-bottom: 15px;
+}
+
+.wc-custom-text-field label {
+    display: block;
+    font-weight: 600;
+    font-size: 14px;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+.wc-custom-text-input {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    font-size: 14px;
+    transition: border-color 0.3s ease;
+}
+
+.wc-custom-text-input:focus {
+    border-color: #0073aa;
+    outline: none;
+    box-shadow: 0 0 0 1px #0073aa;
+}
+
+/* Dark mode support for text fields */
+@media (prefers-color-scheme: dark) {
+    .wc-custom-text-fields-title {
+        color: #fff;
+    }
+    
+    .wc-custom-text-field label {
+        color: #ddd;
+    }
+    
+    .wc-custom-text-input {
+        background: #333;
+        color: #fff;
+        border-color: #555;
+    }
+}

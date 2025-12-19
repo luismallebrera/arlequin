@@ -1,28 +1,44 @@
 # WooCommerce Custom Product Add-ons
 
-A WordPress/WooCommerce plugin that adds custom quantity-based add-on fields to product pages with dynamic price calculation.
+A WordPress/WooCommerce plugin that adds custom quantity-based add-on fields and custom text fields to product pages with dynamic price calculation and per-product control.
 
 ## Description
 
-This plugin enhances WooCommerce product pages by adding three customizable add-on fields with real-time price calculation. Perfect for businesses that want to offer additional products or services alongside their main products.
+This plugin enhances WooCommerce product pages by adding customizable add-on fields with real-time price calculation, plus custom text input fields for event information. Perfect for businesses that want to offer additional products or services alongside their main products, or collect custom information for events like baptisms, communions, and celebrations.
 
-**Per-Product Control**: Add-ons can be enabled or disabled on a per-product basis, giving you full control over which products offer these options.
+**Per-Product Control**: Both add-ons and text fields can be enabled or disabled individually on a per-product basis, giving you full control over which products offer these options.
 
 ## Features
 
-### Custom Add-on Fields
-The plugin adds three pre-configured add-on options that can be enabled per product:
+### Quantity-Based Add-on Fields
+Three pre-configured add-on options that can be enabled per product:
 
 1. **AÑADIR PULSERAS** (Add Bracelets) - €0.30 per unit
 2. **AÑADIR ETIQUETAS** (Add Labels/Tags) - €0.50 per unit
 3. **AÑADIR RECORDATORIO** (Add Reminder) - €1.30 per unit
 
+### Custom Text Fields
+11 custom text input fields for event information (each can be individually enabled/disabled):
+
+1. **NOMBRE DE LA NIÑA/NIÑO** (Child's name)
+2. **NOMBRE DEL BEBÉ** (Baby's name)
+3. **FECHA DEL BAUTIZO** (Baptism date)
+4. **FECHA DE LA COMUNIÓN** (Communion date)
+5. **NOMBRE DE LA IGLESIA** (Church name)
+6. **LOCALIDAD** (Location/Town)
+7. **HORA DE LA MISA** (Mass time)
+8. **NOMBRE RESTAURANTE/LUGAR DE LA CELEBRACIÓN** (Restaurant/Celebration venue)
+9. **NOMBRE DEL O LA PROFE** (Teacher's name)
+10. **AÑO CURSO** (School year)
+11. **OBSERVACIONES** (Observations/Notes)
+
 ### Functionality
 
-- **Per-Product Activation**: Enable or disable add-ons for individual products (default: disabled)
-- **Dynamic Price Calculation**: Real-time price updates as quantities change
-- **Cart Integration**: Selected add-ons are saved and displayed in the cart
-- **Order Details**: Add-ons appear in order details, emails, and admin orders
+- **Per-Product Activation**: Enable or disable add-ons and text fields individually for each product (default: disabled)
+- **Dynamic Price Calculation**: Real-time price updates for quantity-based add-ons
+- **Custom Data Collection**: Collect customer-provided text information
+- **Cart Integration**: Selected add-ons and text field values are saved and displayed in the cart
+- **Order Details**: All data appears in order details, emails, and admin orders
 - **Responsive Design**: Mobile-friendly interface
 - **WooCommerce Compatible**: Works with simple and variable products
 - **Translation Ready**: Fully translatable with .pot file support
@@ -34,7 +50,7 @@ The plugin adds three pre-configured add-on options that can be enabled per prod
 1. Download or clone this repository
 2. Upload the `woocommerce-custom-product-addons` folder to `/wp-content/plugins/`
 3. Activate the plugin through the 'Plugins' menu in WordPress
-4. Enable add-ons for specific products in the product edit page (see Usage for Administrators)
+4. Configure fields for specific products in the product edit page (see Usage for Administrators)
 
 ### Requirements
 
@@ -47,9 +63,13 @@ The plugin adds three pre-configured add-on options that can be enabled per prod
 ### For Administrators
 
 1. Edit a product in WooCommerce
-2. In the Product Data section, under the General tab, find "Enable Custom Add-ons"
-3. Check the box to enable add-ons for this product
-4. Save/Update the product
+2. In the Product Data section, under the General tab, find two sections:
+   - **Enable Custom Add-ons**: Check to enable quantity-based add-ons (Pulseras, Etiquetas, Recordatorio)
+   - **Custom Text Fields**: Check individual boxes to enable specific text fields for this product
+3. Save/Update the product
+4. The enabled fields will now appear on that product's page
+
+**Note**: All fields are disabled by default. You must explicitly enable them per product.
 5. The add-on fields will now appear on that product's page
 
 **Note**: Add-ons are disabled by default for all products. You must explicitly enable them per product.

@@ -5,6 +5,31 @@ All notable changes to the WooCommerce Custom Product Add-ons plugin will be doc
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.0] - 2024-12-19
+
+### Added
+- 11 custom text input fields for event information:
+  - NOMBRE DE LA NIÑA/NIÑO (Child's name)
+  - NOMBRE DEL BEBÉ (Baby's name)
+  - FECHA DEL BAUTIZO (Baptism date)
+  - FECHA DE LA COMUNIÓN (Communion date)
+  - NOMBRE DE LA IGLESIA (Church name)
+  - LOCALIDAD (Location/Town)
+  - HORA DE LA MISA (Mass time)
+  - NOMBRE RESTAURANTE/LUGAR DE LA CELEBRACIÓN (Restaurant/Celebration venue)
+  - NOMBRE DEL O LA PROFE (Teacher's name)
+  - AÑO CURSO (School year)
+  - OBSERVACIONES (Observations/Notes)
+- Individual enable/disable control for each text field in admin
+- Text fields are disabled by default per product
+- Text field values saved to cart and orders
+- Professional styling for text input fields
+
+### Changed
+- Admin interface now includes "Custom Text Fields" section
+- Product page displays text fields when enabled
+- Cart and order details include custom text field values
+
 ## [1.1.0] - 2024-12-19
 
 ### Added

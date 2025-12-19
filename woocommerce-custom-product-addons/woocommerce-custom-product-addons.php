@@ -2,8 +2,8 @@
 /**
  * Plugin Name: WooCommerce Custom Product Add-ons
  * Plugin URI: https://github.com/luismallebrera/arlequin
- * Description: Adds custom quantity-based add-on fields to WooCommerce product pages with dynamic price calculation for bracelets, labels, and reminders. Per-product control.
- * Version: 1.1.0
+ * Description: Adds custom quantity-based add-on fields and custom text fields to WooCommerce product pages with per-product control. Includes event fields for baptisms, communions, and more.
+ * Version: 1.2.0
  * Author: Luis Mallebrera
  * Author URI: https://github.com/luismallebrera
  * Text Domain: wc-custom-addons
@@ -22,7 +22,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 // Define plugin constants
-define( 'WC_CUSTOM_ADDONS_VERSION', '1.1.0' );
+define( 'WC_CUSTOM_ADDONS_VERSION', '1.2.0' );
 define( 'WC_CUSTOM_ADDONS_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'WC_CUSTOM_ADDONS_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 
@@ -38,6 +38,23 @@ class WC_Custom_Product_Addons {
         'pulseras'     => 0.30,
         'etiquetas'    => 0.50,
         'recordatorio' => 1.30,
+    );
+    
+    /**
+     * Custom text fields configuration
+     */
+    private static $custom_text_fields = array(
+        'nombre_nina_nino'      => 'NOMBRE DE LA NIÑA/NIÑO',
+        'nombre_bebe'           => 'NOMBRE DEL BEBÉ',
+        'fecha_bautizo'         => 'FECHA DEL BAUTIZO',
+        'fecha_comunion'        => 'FECHA DE LA COMUNIÓN',
+        'nombre_iglesia'        => 'NOMBRE DE LA IGLESIA',
+        'localidad'             => 'LOCALIDAD',
+        'hora_misa'             => 'HORA DE LA MISA',
+        'nombre_restaurante'    => 'NOMBRE RESTAURANTE/LUGAR DE LA CELEBRACIÓN',
+        'nombre_profe'          => 'NOMBRE DEL O LA PROFE',
+        'ano_curso'             => 'AÑO CURSO',
+        'observaciones'         => 'OBSERVACIONES',
     );
     
     /**
@@ -156,6 +173,21 @@ class WC_Custom_Product_Addons {
         ) );
         
         echo '</div>';
+        
+        // Custom text fields section
+        echo '<div class="options_group">';
+        echo '<h4 style="padding: 10px 12px; margin: 0; border-bottom: 1px solid #eee;">' . __( 'Custom Text Fields', 'wc-custom-addons' ) . '</h4>';
+        
+        foreach ( self::$custom_text_fields as $field_key => $field_label ) {
+            woocommerce_wp_checkbox( array(
+                'id'            => '_enable_text_field_' . $field_key,
+                'label'         => $field_label,
+                'description'   => sprintf( __( 'Enable "%s" text field for this product', 'wc-custom-addons' ), $field_label ),
+                'desc_tip'      => true,
+            ) );
+        }
+        
+        echo '</div>';
     }
     
     /**
@@ -172,9 +204,15 @@ class WC_Custom_Product_Addons {
             return;
         }
         
-        // Sanitize and save the checkbox value
+        // Sanitize and save the checkbox value for quantity add-ons
         $enable_addons = isset( $_POST['_enable_custom_addons'] ) ? 'yes' : 'no';
         update_post_meta( $post_id, '_enable_custom_addons', sanitize_text_field( $enable_addons ) );
+        
+        // Save custom text field settings
+        foreach ( self::$custom_text_fields as $field_key => $field_label ) {
+            $field_enabled = isset( $_POST['_enable_text_field_' . $field_key] ) ? 'yes' : 'no';
+            update_post_meta( $post_id, '_enable_text_field_' . $field_key, sanitize_text_field( $field_enabled ) );
+        }
     }
     
     /**
@@ -190,7 +228,17 @@ class WC_Custom_Product_Addons {
         
         // Check if add-ons are enabled for this product
         $enable_addons = get_post_meta( $product->get_id(), '_enable_custom_addons', true );
-        if ( $enable_addons !== 'yes' ) {
+        
+        // Check if any text fields are enabled
+        $enabled_text_fields = array();
+        foreach ( self::$custom_text_fields as $field_key => $field_label ) {
+            if ( get_post_meta( $product->get_id(), '_enable_text_field_' . $field_key, true ) === 'yes' ) {
+                $enabled_text_fields[ $field_key ] = $field_label;
+            }
+        }
+        
+        // If neither add-ons nor text fields are enabled, don't display anything
+        if ( $enable_addons !== 'yes' && empty( $enabled_text_fields ) ) {
             return;
         }
         
@@ -201,6 +249,7 @@ class WC_Custom_Product_Addons {
         <div class="wc-custom-addons-wrapper">
             <h3 class="wc-custom-addons-title"><?php esc_html_e( 'Personaliza tu pedido', 'wc-custom-addons' ); ?></h3>
             
+            <?php if ( $enable_addons === 'yes' ) : ?>
             <div class="wc-custom-addon-field">
                 <label for="addon_pulseras">
                     <?php esc_html_e( 'AÑADIR PULSERAS', 'wc-custom-addons' ); ?>
@@ -253,6 +302,29 @@ class WC_Custom_Product_Addons {
                 <strong><?php esc_html_e( 'Coste adicional:', 'wc-custom-addons' ); ?></strong>
                 <span class="wc-addons-total-price"><?php echo wc_price( 0 ); ?></span>
             </div>
+            <?php endif; ?>
+            
+            <?php if ( ! empty( $enabled_text_fields ) ) : ?>
+            <div class="wc-custom-text-fields">
+                <?php if ( $enable_addons === 'yes' ) : ?>
+                    <h4 class="wc-custom-text-fields-title"><?php esc_html_e( 'Información adicional', 'wc-custom-addons' ); ?></h4>
+                <?php endif; ?>
+                
+                <?php foreach ( $enabled_text_fields as $field_key => $field_label ) : ?>
+                <div class="wc-custom-text-field">
+                    <label for="text_field_<?php echo esc_attr( $field_key ); ?>">
+                        <?php echo esc_html( $field_label ); ?>
+                    </label>
+                    <input type="text" 
+                           id="text_field_<?php echo esc_attr( $field_key ); ?>" 
+                           name="text_field_<?php echo esc_attr( $field_key ); ?>" 
+                           class="wc-custom-text-input" 
+                           value="" 
+                           placeholder="<?php echo esc_attr( $field_label ); ?>" />
+                </div>
+                <?php endforeach; ?>
+            </div>
+            <?php endif; ?>
         </div>
         <?php
     }
@@ -313,6 +385,30 @@ class WC_Custom_Product_Addons {
             $cart_item_data['unique_key'] = md5( microtime() . wp_rand() );
         }
         
+        // Process custom text fields
+        $text_fields = array();
+        foreach ( self::$custom_text_fields as $field_key => $field_label ) {
+            if ( isset( $_POST['text_field_' . $field_key] ) ) {
+                $field_value = sanitize_text_field( wp_unslash( $_POST['text_field_' . $field_key] ) );
+                if ( ! empty( $field_value ) ) {
+                    $text_fields[ $field_key ] = array(
+                        'label' => $field_label,
+                        'value' => $field_value,
+                    );
+                }
+            }
+        }
+        
+        // Add text fields to cart item data if we have any
+        if ( ! empty( $text_fields ) ) {
+            $cart_item_data['wc_custom_text_fields'] = $text_fields;
+            
+            // Make cart item unique if not already done
+            if ( ! isset( $cart_item_data['unique_key'] ) ) {
+                $cart_item_data['unique_key'] = md5( microtime() . wp_rand() );
+            }
+        }
+        
         return $cart_item_data;
     }
     
@@ -331,6 +427,16 @@ class WC_Custom_Product_Addons {
                         wc_price( $addon['price'] ),
                         wc_price( $total )
                     ),
+                );
+            }
+        }
+        
+        // Display custom text fields
+        if ( isset( $cart_item['wc_custom_text_fields'] ) && ! empty( $cart_item['wc_custom_text_fields'] ) ) {
+            foreach ( $cart_item['wc_custom_text_fields'] as $field_key => $field_data ) {
+                $item_data[] = array(
+                    'key'   => $field_data['label'],
+                    'value' => $field_data['value'],
                 );
             }
         }
@@ -379,6 +485,17 @@ class WC_Custom_Product_Addons {
                         wc_price( $addon['price'] ),
                         wc_price( $total )
                     ),
+                    true
+                );
+            }
+        }
+        
+        // Add custom text fields to order
+        if ( isset( $values['wc_custom_text_fields'] ) && ! empty( $values['wc_custom_text_fields'] ) ) {
+            foreach ( $values['wc_custom_text_fields'] as $field_key => $field_data ) {
+                $item->add_meta_data(
+                    $field_data['label'],
+                    $field_data['value'],
                     true
                 );
             }
