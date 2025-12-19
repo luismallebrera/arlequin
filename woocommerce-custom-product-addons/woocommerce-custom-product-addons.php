@@ -3,7 +3,7 @@
  * Plugin Name: WooCommerce Custom Product Add-ons
  * Plugin URI: https://github.com/luismallebrera/arlequin
  * Description: Adds custom quantity-based add-on fields and custom text fields to WooCommerce product pages with per-product control. Includes event fields for baptisms, communions, and more.
- * Version: 1.3.0
+ * Version: 1.3.1
  * Author: Luis Mallebrera
  * Author URI: https://github.com/luismallebrera
  * Text Domain: wc-custom-addons
@@ -22,7 +22,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 // Define plugin constants
-define( 'WC_CUSTOM_ADDONS_VERSION', '1.3.0' );
+define( 'WC_CUSTOM_ADDONS_VERSION', '1.3.1' );
 define( 'WC_CUSTOM_ADDONS_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'WC_CUSTOM_ADDONS_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 
@@ -342,6 +342,34 @@ class WC_Custom_Product_Addons {
         // Verify nonce
         if ( ! isset( $_POST['wc_custom_addons_nonce'] ) || 
              ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['wc_custom_addons_nonce'] ) ), 'wc_custom_addons_nonce_action' ) ) {
+            return $cart_item_data;
+        }
+        
+        // Validate required text fields
+        $enabled_required_fields = array();
+        foreach ( self::$custom_text_fields as $field_key => $field_label ) {
+            // Check if field is enabled for this product
+            if ( get_post_meta( $product_id, '_enable_text_field_' . $field_key, true ) === 'yes' ) {
+                // Observaciones is not required, all others are
+                if ( $field_key !== 'observaciones' ) {
+                    $enabled_required_fields[ $field_key ] = $field_label;
+                }
+            }
+        }
+        
+        // Check if required fields are filled
+        $missing_fields = array();
+        foreach ( $enabled_required_fields as $field_key => $field_label ) {
+            if ( ! isset( $_POST['text_field_' . $field_key] ) || 
+                 empty( trim( sanitize_text_field( wp_unslash( $_POST['text_field_' . $field_key] ) ) ) ) ) {
+                $missing_fields[] = $field_label;
+            }
+        }
+        
+        // If there are missing required fields, throw an error
+        if ( ! empty( $missing_fields ) ) {
+            $error_message = __( 'Por favor, complete los siguientes campos obligatorios: ', 'wc-custom-addons' ) . implode( ', ', $missing_fields );
+            wc_add_notice( $error_message, 'error' );
             return $cart_item_data;
         }
         

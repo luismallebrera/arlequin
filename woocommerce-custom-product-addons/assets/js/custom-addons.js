@@ -166,11 +166,70 @@ jQuery(document).ready(function($) {
         setTimeout(updateAllPrices, 500);
     }
     
+    /**
+     * Validate required custom text fields before add to cart
+     */
+    function validateRequiredFields() {
+        var $requiredFields = $('.wc-custom-text-input[required]');
+        var emptyFields = [];
+        
+        $requiredFields.each(function() {
+            var $field = $(this);
+            var value = $field.val().trim();
+            
+            if (value === '') {
+                emptyFields.push($field.prev('label').text().replace('*', '').trim());
+                $field.css('border-color', '#c34591');
+            } else {
+                $field.css('border-color', '#ddd');
+            }
+        });
+        
+        if (emptyFields.length > 0) {
+            var message = 'Por favor, complete los siguientes campos obligatorios:\n\n' + emptyFields.join('\n');
+            alert(message);
+            
+            // Scroll to first empty field
+            $requiredFields.filter(function() {
+                return $(this).val().trim() === '';
+            }).first().focus();
+            
+            return false;
+        }
+        
+        return true;
+    }
+    
+    /**
+     * Intercept add to cart button click
+     */
+    function setupAddToCartValidation() {
+        var $addToCartButton = $('.single_add_to_cart_button');
+        
+        if ($addToCartButton.length > 0) {
+            $addToCartButton.on('click', function(e) {
+                var $requiredFields = $('.wc-custom-text-input[required]');
+                
+                if ($requiredFields.length > 0) {
+                    if (!validateRequiredFields()) {
+                        e.preventDefault();
+                        e.stopImmediatePropagation();
+                        return false;
+                    }
+                }
+            });
+        }
+    }
+    
     // Initialize on DOM ready
     init();
+    setupAddToCartValidation();
     
     // Re-initialize on AJAX complete (for AJAX add to cart)
     $(document).ajaxComplete(function() {
-        setTimeout(init, 500);
+        setTimeout(function() {
+            init();
+            setupAddToCartValidation();
+        }, 500);
     });
 });

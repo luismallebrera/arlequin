@@ -5,6 +5,16 @@ All notable changes to the WooCommerce Custom Product Add-ons plugin will be doc
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.1] - 2024-12-19
+
+### Fixed
+- **Required Field Validation**: Implemented both client-side (JavaScript) and server-side (PHP) validation
+  - JavaScript validation prevents form submission if required fields are empty
+  - Alert message shows list of missing required fields
+  - Server-side validation displays WooCommerce error notice if validation fails
+  - Fields highlight in pink when empty on validation attempt
+  - Prevents adding to cart without filling all required text fields (except Observaciones)
+
 ## [1.3.0] - 2024-12-19
 
 ### Changed
