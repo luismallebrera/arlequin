@@ -3,7 +3,7 @@
  * Plugin Name: WooCommerce Custom Product Add-ons
  * Plugin URI: https://github.com/luismallebrera/arlequin
  * Description: Adds custom quantity-based add-on fields and custom text fields to WooCommerce product pages with per-product control. Includes event fields for baptisms, communions, and more.
- * Version: 1.3.1
+ * Version: 1.3.2
  * Author: Luis Mallebrera
  * Author URI: https://github.com/luismallebrera
  * Text Domain: wc-custom-addons
@@ -22,7 +22,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 // Define plugin constants
-define( 'WC_CUSTOM_ADDONS_VERSION', '1.3.1' );
+define( 'WC_CUSTOM_ADDONS_VERSION', '1.3.2' );
 define( 'WC_CUSTOM_ADDONS_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'WC_CUSTOM_ADDONS_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 

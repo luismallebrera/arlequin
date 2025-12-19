@@ -5,6 +5,17 @@ All notable changes to the WooCommerce Custom Product Add-ons plugin will be doc
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.2] - 2024-12-19
+
+### Changed
+- **Text Input Styling**: Updated custom text field input styling
+  - Reduced field margin from 15px to 7px for more compact layout
+  - Adjusted padding from 10px to 7px for slimmer inputs
+  - Increased font size from 14px to 17px for better readability
+  - Changed border color from #ddd to #e1e1e1 for lighter appearance
+  - Added margin-bottom: 0 to inputs to prevent extra spacing
+  - Applied !important flags to ensure styling overrides theme defaults
+
 ## [1.3.1] - 2024-12-19
 
 ### Fixed
