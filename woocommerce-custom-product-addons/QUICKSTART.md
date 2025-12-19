@@ -21,14 +21,23 @@ Get the WooCommerce Custom Product Add-ons plugin up and running in 5 minutes!
 2. Go to WordPress Admin → Plugins → Add New → Upload Plugin
 3. Choose the ZIP file and click "Install Now" → "Activate"
 
-### Step 3: Verify It's Working
-1. Visit any WooCommerce product page
+### Step 3: Enable Add-ons for Products
+1. Go to WordPress Admin → Products
+2. Edit a product where you want add-ons
+3. In Product Data section → General tab
+4. Check "Enable Custom Add-ons"
+5. Click "Update"
+
+### Step 4: Verify It's Working
+1. Visit the product page where you enabled add-ons
 2. You should see "Personaliza tu pedido" section with three add-on fields
 3. ✅ Done! The plugin is active and working
 
+**Note**: Add-ons are **disabled by default** for all products. You must enable them per product.
+
 ## 🎯 What You Get
 
-The plugin automatically adds these add-ons to ALL product pages:
+The plugin adds these add-ons to products where you enable them:
 
 | Add-on | Spanish Label | Price |
 |--------|---------------|-------|
@@ -36,9 +45,15 @@ The plugin automatically adds these add-ons to ALL product pages:
 | Labels/Tags | AÑADIR ETIQUETAS | €0.50/unit |
 | Reminder | AÑADIR RECORDATORIO | €1.30/unit |
 
-## 🚀 How Customers Use It
+## 🚀 How It Works
 
-1. **Product Page**: Customer selects add-on quantities (0-100)
+### For Administrators
+1. **Product Edit Page**: Check "Enable Custom Add-ons" in Product Data → General
+2. **Per-Product Control**: Enable only for products where you want add-ons
+3. **Default**: Add-ons are disabled unless you enable them
+
+### For Customers
+1. **Product Page**: Customer selects add-on quantities (0-100) on enabled products
 2. **Price Updates**: Total price updates automatically in real-time
 3. **Add to Cart**: Add-ons are saved with the product
 4. **Cart**: Add-ons display with details (e.g., "Pulseras: 2 × €0.30 = €0.60")
@@ -83,12 +98,14 @@ max="100"  // Change from 100 to your desired maximum
 
 ## 🧪 Quick Test
 
-1. Go to any product page
-2. Set "AÑADIR PULSERAS" to 2 → Should show €0.60 additional cost
-3. Set "AÑADIR ETIQUETAS" to 1 → Should show €1.10 additional cost (0.60 + 0.50)
-4. Click "Add to Cart"
-5. Go to cart → Should see both add-ons listed with prices
-6. ✅ If all works, you're all set!
+1. Edit a product and enable "Enable Custom Add-ons"
+2. Go to that product's page
+3. You should see the add-on fields with labels
+4. Set "AÑADIR PULSERAS" to 2 → Should show €0.60 additional cost
+5. Set "AÑADIR ETIQUETAS" to 1 → Should show €1.10 additional cost (0.60 + 0.50)
+6. Click "Add to Cart"
+7. Go to cart → Should see both add-ons listed with prices
+8. ✅ If all works, you're all set!
 
 ## 📝 Need More Details?
 
@@ -99,9 +116,15 @@ max="100"  // Change from 100 to your desired maximum
 ## ❓ Troubleshooting
 
 **Add-ons not showing?**
-- Make sure WooCommerce is installed and active
-- Check that you're viewing a Simple or Variable product
+- Make sure you've enabled "Enable Custom Add-ons" in the product settings
+- Check that WooCommerce is installed and active
+- Verify you're viewing a Simple or Variable product
 - Clear browser cache
+
+**Labels not visible?**
+- Check browser console (F12) for CSS errors
+- Ensure the CSS file is loading properly
+- Check for theme conflicts with label styling
 
 **Prices not updating?**
 - Check browser console (F12) for JavaScript errors

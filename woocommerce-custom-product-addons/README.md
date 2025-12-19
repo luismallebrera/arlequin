@@ -6,10 +6,12 @@ A WordPress/WooCommerce plugin that adds custom quantity-based add-on fields to 
 
 This plugin enhances WooCommerce product pages by adding three customizable add-on fields with real-time price calculation. Perfect for businesses that want to offer additional products or services alongside their main products.
 
+**Per-Product Control**: Add-ons can be enabled or disabled on a per-product basis, giving you full control over which products offer these options.
+
 ## Features
 
 ### Custom Add-on Fields
-The plugin adds three pre-configured add-on options to all WooCommerce product pages:
+The plugin adds three pre-configured add-on options that can be enabled per product:
 
 1. **AÑADIR PULSERAS** (Add Bracelets) - €0.30 per unit
 2. **AÑADIR ETIQUETAS** (Add Labels/Tags) - €0.50 per unit
@@ -17,6 +19,7 @@ The plugin adds three pre-configured add-on options to all WooCommerce product p
 
 ### Functionality
 
+- **Per-Product Activation**: Enable or disable add-ons for individual products (default: disabled)
 - **Dynamic Price Calculation**: Real-time price updates as quantities change
 - **Cart Integration**: Selected add-ons are saved and displayed in the cart
 - **Order Details**: Add-ons appear in order details, emails, and admin orders
@@ -31,7 +34,7 @@ The plugin adds three pre-configured add-on options to all WooCommerce product p
 1. Download or clone this repository
 2. Upload the `woocommerce-custom-product-addons` folder to `/wp-content/plugins/`
 3. Activate the plugin through the 'Plugins' menu in WordPress
-4. The add-on fields will automatically appear on all product pages
+4. Enable add-ons for specific products in the product edit page (see Usage for Administrators)
 
 ### Requirements
 
@@ -41,9 +44,19 @@ The plugin adds three pre-configured add-on options to all WooCommerce product p
 
 ## Usage
 
+### For Administrators
+
+1. Edit a product in WooCommerce
+2. In the Product Data section, under the General tab, find "Enable Custom Add-ons"
+3. Check the box to enable add-ons for this product
+4. Save/Update the product
+5. The add-on fields will now appear on that product's page
+
+**Note**: Add-ons are disabled by default for all products. You must explicitly enable them per product.
+
 ### For Customers
 
-1. Navigate to any WooCommerce product page
+1. Navigate to a product page where add-ons are enabled
 2. Select quantities for desired add-ons using the number inputs
 3. Watch the price update automatically
 4. Add the product to cart

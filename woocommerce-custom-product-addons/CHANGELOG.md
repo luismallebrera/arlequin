@@ -5,6 +5,21 @@ All notable changes to the WooCommerce Custom Product Add-ons plugin will be doc
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0] - 2024-12-19
+
+### Added
+- Per-product enable/disable control for add-ons
+- Admin checkbox in Product Data → General tab to enable add-ons
+- Add-ons are now disabled by default for all products
+
+### Changed
+- Add-ons must be explicitly enabled per product (default: disabled)
+- Improved label visibility with darker color (#333 instead of #555)
+- Added margin-bottom to labels for better spacing
+
+### Fixed
+- Enhanced label styling for better visibility
+
 ## [1.0.0] - 2024-12-19
 
 ### Added

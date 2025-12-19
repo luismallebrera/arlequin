@@ -2,8 +2,8 @@
 /**
  * Plugin Name: WooCommerce Custom Product Add-ons
  * Plugin URI: https://github.com/luismallebrera/arlequin
- * Description: Adds custom quantity-based add-on fields to WooCommerce product pages with dynamic price calculation for bracelets, labels, and reminders.
- * Version: 1.0.0
+ * Description: Adds custom quantity-based add-on fields to WooCommerce product pages with dynamic price calculation for bracelets, labels, and reminders. Per-product control.
+ * Version: 1.1.0
  * Author: Luis Mallebrera
  * Author URI: https://github.com/luismallebrera
  * Text Domain: wc-custom-addons
@@ -22,7 +22,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 // Define plugin constants
-define( 'WC_CUSTOM_ADDONS_VERSION', '1.0.0' );
+define( 'WC_CUSTOM_ADDONS_VERSION', '1.1.0' );
 define( 'WC_CUSTOM_ADDONS_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'WC_CUSTOM_ADDONS_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 
@@ -60,6 +60,10 @@ class WC_Custom_Product_Addons {
             add_action( 'admin_notices', array( $this, 'woocommerce_missing_notice' ) );
             return;
         }
+        
+        // Admin: Add product settings
+        add_action( 'woocommerce_product_options_general_product_data', array( $this, 'add_product_settings' ) );
+        add_action( 'woocommerce_process_product_meta', array( $this, 'save_product_settings' ) );
         
         // Enqueue scripts and styles
         add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
@@ -137,6 +141,32 @@ class WC_Custom_Product_Addons {
     }
     
     /**
+     * Add product settings in admin
+     */
+    public function add_product_settings() {
+        global $post;
+        
+        echo '<div class="options_group">';
+        
+        woocommerce_wp_checkbox( array(
+            'id'            => '_enable_custom_addons',
+            'label'         => __( 'Enable Custom Add-ons', 'wc-custom-addons' ),
+            'description'   => __( 'Enable custom add-ons (Pulseras, Etiquetas, Recordatorio) for this product', 'wc-custom-addons' ),
+            'desc_tip'      => true,
+        ) );
+        
+        echo '</div>';
+    }
+    
+    /**
+     * Save product settings
+     */
+    public function save_product_settings( $post_id ) {
+        $enable_addons = isset( $_POST['_enable_custom_addons'] ) ? 'yes' : 'no';
+        update_post_meta( $post_id, '_enable_custom_addons', $enable_addons );
+    }
+    
+    /**
      * Display custom fields on product page
      */
     public function display_custom_fields() {
@@ -144,6 +174,12 @@ class WC_Custom_Product_Addons {
         
         // Only show on simple and variable products
         if ( ! $product || ( ! $product->is_type( 'simple' ) && ! $product->is_type( 'variable' ) ) ) {
+            return;
+        }
+        
+        // Check if add-ons are enabled for this product
+        $enable_addons = get_post_meta( $product->get_id(), '_enable_custom_addons', true );
+        if ( $enable_addons !== 'yes' ) {
             return;
         }
         
