@@ -45,11 +45,13 @@ class WC_Custom_Product_Addons {
      */
     private static $custom_text_fields = array(
         'nombre_persona'        => 'NOMBRE (NIÑA/NIÑO/BEBÉ/NOVIOS/PROFE)',
+        'inicial'               => 'INICIAL',
         'fecha_evento'          => 'FECHA (COMUNIÓN/BAUTIZO/BODA/EVENTO)',
+        'hora_evento'           => 'HORA DEL EVENTO',
         'localidad'             => 'LOCALIDAD',
-        'nombre_iglesia'        => 'NOMBRE IGLESIA',
+        'iglesia'               => 'IGLESIA',
         'hora_misa'             => 'HORA MISA',
-        'nombre_restaurante'    => 'NOMBRE RESTAURANTE/LUGAR CELEBRACIÓN',
+        'restaurante'           => 'RESTAURANTE/LUGAR DE CELEBRACIÓN',
         'ano_curso'             => 'AÑO CURSO',
         'observaciones'         => 'OBSERVACIONES',
     );
