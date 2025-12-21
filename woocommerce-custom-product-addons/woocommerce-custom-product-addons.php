@@ -46,8 +46,8 @@ class WC_Custom_Product_Addons {
     private static $custom_text_fields = array(
         'nombre_persona'        => 'NOMBRE (NIÑA/NIÑO/BEBÉ/NOVIOS/PROFE)',
         'fecha_evento'          => 'FECHA (COMUNIÓN/BAUTIZO/BODA/EVENTO)',
-        'nombre_iglesia'        => 'NOMBRE IGLESIA',
         'localidad'             => 'LOCALIDAD',
+        'nombre_iglesia'        => 'NOMBRE IGLESIA',
         'hora_misa'             => 'HORA MISA',
         'nombre_restaurante'    => 'NOMBRE RESTAURANTE/LUGAR CELEBRACIÓN',
         'ano_curso'             => 'AÑO CURSO',
