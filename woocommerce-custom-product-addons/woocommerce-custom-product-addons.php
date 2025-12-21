@@ -44,9 +44,9 @@ class WC_Custom_Product_Addons {
      * Custom text fields configuration
      */
     private static $custom_text_fields = array(
-        'nombre_persona'        => 'NOMBRE (NIÑA/NIÑO/BEBÉ/NOVIOS/PROFE)',
+        'nombre_persona'        => 'NOMBRE',
         'inicial'               => 'INICIAL',
-        'fecha_evento'          => 'FECHA (COMUNIÓN/BAUTIZO/BODA/EVENTO)',
+        'fecha_evento'          => 'FECHA',
         'hora_evento'           => 'HORA DEL EVENTO',
         'localidad'             => 'LOCALIDAD',
         'iglesia'               => 'IGLESIA',
@@ -55,6 +55,33 @@ class WC_Custom_Product_Addons {
         'ano_curso'             => 'AÑO CURSO',
         'observaciones'         => 'OBSERVACIONES',
     );
+
+    /**
+     * Select field options
+     */
+    private static $select_field_options = array(
+        'nombre_persona' => array(
+            'NIÑA/NIÑO' => 'NIÑA/NIÑO',
+            'NIÑA'      => 'NIÑA',
+            'NIÑO'      => 'NIÑO',
+            'NOVIOS'    => 'NOVIOS',
+            'PROFE'     => 'PROFE',
+        ),
+        'fecha_evento' => array(
+            'COMUNIÓN'    => 'COMUNIÓN',
+            'BAUTIZO'     => 'BAUTIZO',
+            'BODA'        => 'BODA',
+            'EVENTO'      => 'EVENTO',
+            'NACIMIENTO'  => 'NACIMIENTO',
+        ),
+    );
+
+    /**
+     * Get field type (select or text)
+     */
+    private static function get_field_type( $field_key ) {
+        return isset( self::$select_field_options[ $field_key ] ) ? 'select' : 'text';
+    }
 
     /**
      * Constructor
@@ -254,6 +281,7 @@ class WC_Custom_Product_Addons {
                 <?php foreach ( $enabled_text_fields as $field_key => $field_label ) :
                     // Observaciones is not required, all others are
                     $is_required = ( $field_key !== 'observaciones' );
+                    $field_type = self::get_field_type( $field_key );
                 ?>
                 <div class="wc-custom-text-field">
                     <label for="text_field_<?php echo esc_attr( $field_key ); ?>">
@@ -262,13 +290,25 @@ class WC_Custom_Product_Addons {
                             <span class="required">*</span>
                         <?php endif; ?>
                     </label>
-                    <input type="text"
-                           id="text_field_<?php echo esc_attr( $field_key ); ?>"
-                           name="text_field_<?php echo esc_attr( $field_key ); ?>"
-                           class="wc-custom-text-input"
-                           value=""
-                           placeholder="<?php echo esc_attr( $field_label ); ?>"
-                           <?php echo $is_required ? 'required' : ''; ?> />
+                    <?php if ( $field_type === 'select' ) : ?>
+                        <select id="text_field_<?php echo esc_attr( $field_key ); ?>"
+                                name="text_field_<?php echo esc_attr( $field_key ); ?>"
+                                class="wc-custom-text-input"
+                                <?php echo $is_required ? 'required' : ''; ?>>
+                            <option value=""><?php esc_html_e( 'Seleccione una opción', 'wc-custom-addons' ); ?></option>
+                            <?php foreach ( self::$select_field_options[ $field_key ] as $option_value => $option_label ) : ?>
+                                <option value="<?php echo esc_attr( $option_value ); ?>"><?php echo esc_html( $option_label ); ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    <?php else : ?>
+                        <input type="text"
+                               id="text_field_<?php echo esc_attr( $field_key ); ?>"
+                               name="text_field_<?php echo esc_attr( $field_key ); ?>"
+                               class="wc-custom-text-input"
+                               value=""
+                               placeholder="<?php echo esc_attr( $field_label ); ?>"
+                               <?php echo $is_required ? 'required' : ''; ?> />
+                    <?php endif; ?>
                 </div>
                 <?php endforeach; ?>
             </div>
