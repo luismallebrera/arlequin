@@ -50,6 +50,7 @@ class WC_Custom_Options {
         add_filter( 'woocommerce_product_related_posts_relate_by_category', array( $this, 'related_products_by_category' ), 999 );
         add_filter( 'woocommerce_product_related_posts_relate_by_tag', array( $this, 'related_products_by_tag' ), 999 );
         add_filter( 'woocommerce_output_related_products_args', array( $this, 'customize_related_products_args' ), 999 );
+        add_filter( 'woocommerce_related_products', array( $this, 'custom_related_products' ), 999, 3 );
         
         // Add custom RELATED field to products
         add_action( 'woocommerce_product_options_general_product_data', array( $this, 'add_related_custom_field' ) );
@@ -72,6 +73,10 @@ class WC_Custom_Options {
      */
     public function related_products_by_category( $relate_by_category ) {
         $option = get_option( 'wc_options_related_products_by', 'categories' );
+        // Return false if using custom field
+        if ( $option === 'custom' ) {
+            return false;
+        }
         // Return true if option is 'categories' or 'both'
         return in_array( $option, array( 'categories', 'both' ) );
     }
@@ -81,6 +86,10 @@ class WC_Custom_Options {
      */
     public function related_products_by_tag( $relate_by_tag ) {
         $option = get_option( 'wc_options_related_products_by', 'categories' );
+        // Return false if using custom field
+        if ( $option === 'custom' ) {
+            return false;
+        }
         // Return true if option is 'tags' or 'both'
         return in_array( $option, array( 'tags', 'both' ) );
     }
@@ -109,6 +118,7 @@ class WC_Custom_Options {
                         'categories' => __( 'Solo categorías', 'wc-options' ),
                         'tags'       => __( 'Solo etiquetas', 'wc-options' ),
                         'both'       => __( 'Categorías y etiquetas', 'wc-options' ),
+                        'custom'     => __( 'Campo personalizado RELATED', 'wc-options' ),
                     ),
                 ),
                 array(
@@ -160,6 +170,46 @@ class WC_Custom_Options {
     }
 
     /**
+     * Custom related products based on RELATED field
+     */
+    public function custom_related_products( $related_posts, $product_id, $args ) {
+        $option = get_option( 'wc_options_related_products_by', 'categories' );
+        
+        // Only apply if custom option is selected
+        if ( $option !== 'custom' ) {
+            return $related_posts;
+        }
+        
+        // Get custom related field value
+        $custom_related = get_post_meta( $product_id, '_custom_related_field', true );
+        
+        if ( empty( $custom_related ) ) {
+            return $related_posts;
+        }
+        
+        // Search for products with the same RELATED tag value
+        $args_query = array(
+            'post_type'      => 'product',
+            'posts_per_page' => -1,
+            'post__not_in'   => array( $product_id ),
+            'post_status'    => 'publish',
+            'fields'         => 'ids',
+            'meta_query'     => array(
+                array(
+                    'key'     => '_custom_related_field',
+                    'value'   => $custom_related,
+                    'compare' => '='
+                )
+            )
+        );
+        
+        $related_query = new \WP_Query( $args_query );
+        $custom_ids = $related_query->posts;
+        
+        return ! empty( $custom_ids ) ? $custom_ids : $related_posts;
+    }
+
+    /**
      * Add custom RELATED field to product
      */
     public function add_related_custom_field() {
@@ -170,9 +220,9 @@ class WC_Custom_Options {
         woocommerce_wp_text_input( array(
             'id'          => '_custom_related_field',
             'label'       => __( 'RELATED', 'wc-options' ),
-            'placeholder' => __( 'Información de productos relacionados', 'wc-options' ),
+            'placeholder' => __( 'Etiqueta de productos relacionados', 'wc-options' ),
             'desc_tip'    => true,
-            'description' => __( 'Campo personalizado para productos relacionados', 'wc-options' ),
+            'description' => __( 'Productos con la misma etiqueta se mostrarán como relacionados (ej: "verano", "boda", "pack-especial"). Solo funciona si seleccionas "Campo personalizado RELATED" en los ajustes.', 'wc-options' ),
         ) );
         
         echo '</div>';
