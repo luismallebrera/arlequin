@@ -53,8 +53,9 @@ class WC_Custom_Product_Addons {
         'hora_misa'             => 'HORA MISA',
         'restaurante'           => 'RESTAURANTE/LUGAR DE CELEBRACIÓN',
         'ano_curso'             => 'AÑO CURSO',
+        'frase_texto'           => 'FRASE/TEXTO',
+        'numero_cuenta'         => 'NUMERO CUENTA',
         'observaciones'         => 'OBSERVACIONES',
-        'menu'                  => 'MENÚ',
     );
 
     /**
@@ -65,8 +66,8 @@ class WC_Custom_Product_Addons {
             'NOMBRE NIÑA/NIÑO'   => 'NOMBRE NIÑA/NIÑO',
             'NOMBRE NIÑA'        => 'NOMBRE NIÑA',
             'NOMBRE NIÑO'        => 'NOMBRE NIÑO',
-            'NOMBRE NOVIOS/NIÑO' => 'NOMBRE NOVIOS/NIÑO',
             'NOMBRE NOVIOS'      => 'NOMBRE NOVIOS',
+            'NOMBRE NOVIOS/NIÑO' => 'NOMBRE NOVIOS/NIÑO',
             'NOMBRE PROFE'       => 'NOMBRE PROFE',
         ),
         'fecha_evento' => array(
@@ -207,12 +208,30 @@ class WC_Custom_Product_Addons {
         echo '<h4 class="options_title" style="padding: 10px 12px; margin: 0; border-bottom: 1px solid #eee;">' . __( 'Custom Text Fields', 'wc-custom-addons' ) . '</h4>';
 
         foreach ( self::$custom_text_fields as $field_key => $field_label ) {
-            woocommerce_wp_checkbox( array(
-                'id'            => '_enable_text_field_' . $field_key,
-                'label'         => $field_label,
-                'description'   => sprintf( __( 'Enable "%s" text field for this product', 'wc-custom-addons' ), $field_label ),
-                'desc_tip'      => true,
-            ) );
+            // Check if this field has select options
+            if ( isset( self::$select_field_options[ $field_key ] ) ) {
+                // Show select dropdown for fields with predefined options
+                $options = array( '' => __( 'Desactivado', 'wc-custom-addons' ) );
+                foreach ( self::$select_field_options[ $field_key ] as $option_value => $option_label ) {
+                    $options[ $option_value ] = $option_label;
+                }
+                
+                woocommerce_wp_select( array(
+                    'id'            => '_text_field_option_' . $field_key,
+                    'label'         => $field_label,
+                    'description'   => sprintf( __( 'Seleccione la opción para el campo "%s"', 'wc-custom-addons' ), $field_label ),
+                    'desc_tip'      => true,
+                    'options'       => $options,
+                ) );
+            } else {
+                // Show checkbox for regular text fields
+                woocommerce_wp_checkbox( array(
+                    'id'            => '_enable_text_field_' . $field_key,
+                    'label'         => $field_label,
+                    'description'   => sprintf( __( 'Enable "%s" text field for this product', 'wc-custom-addons' ), $field_label ),
+                    'desc_tip'      => true,
+                ) );
+            }
         }
 
         echo '</div>';
@@ -238,8 +257,16 @@ class WC_Custom_Product_Addons {
 
         // Save custom text field settings
         foreach ( self::$custom_text_fields as $field_key => $field_label ) {
-            $field_enabled = isset( $_POST['_enable_text_field_' . $field_key] ) ? 'yes' : 'no';
-            update_post_meta( $post_id, '_enable_text_field_' . $field_key, sanitize_text_field( $field_enabled ) );
+            // Check if this field has select options
+            if ( isset( self::$select_field_options[ $field_key ] ) ) {
+                // Save the selected option
+                $selected_option = isset( $_POST['_text_field_option_' . $field_key] ) ? sanitize_text_field( $_POST['_text_field_option_' . $field_key] ) : '';
+                update_post_meta( $post_id, '_text_field_option_' . $field_key, $selected_option );
+            } else {
+                // Save checkbox value for regular fields
+                $field_enabled = isset( $_POST['_enable_text_field_' . $field_key] ) ? 'yes' : 'no';
+                update_post_meta( $post_id, '_enable_text_field_' . $field_key, sanitize_text_field( $field_enabled ) );
+            }
         }
     }
 
@@ -260,8 +287,18 @@ class WC_Custom_Product_Addons {
         // Check if any text fields are enabled
         $enabled_text_fields = array();
         foreach ( self::$custom_text_fields as $field_key => $field_label ) {
-            if ( get_post_meta( $product->get_id(), '_enable_text_field_' . $field_key, true ) === 'yes' ) {
-                $enabled_text_fields[ $field_key ] = $field_label;
+            // Check if this field has select options
+            if ( isset( self::$select_field_options[ $field_key ] ) ) {
+                // Get the selected option from backend
+                $selected_option = get_post_meta( $product->get_id(), '_text_field_option_' . $field_key, true );
+                if ( ! empty( $selected_option ) ) {
+                    $enabled_text_fields[ $field_key ] = $selected_option;
+                }
+            } else {
+                // Check if regular field is enabled
+                if ( get_post_meta( $product->get_id(), '_enable_text_field_' . $field_key, true ) === 'yes' ) {
+                    $enabled_text_fields[ $field_key ] = $field_label;
+                }
             }
         }
 
@@ -281,11 +318,8 @@ class WC_Custom_Product_Addons {
                 <h3 class="wc-custom-addons-title"><?php esc_html_e( 'Información adicional', 'wc-custom-addons' ); ?></h3>
 
                 <?php foreach ( $enabled_text_fields as $field_key => $field_label ) :
-                    // Observaciones and menu are not required, all others are
-                    $is_required = ( $field_key !== 'observaciones' && $field_key !== 'menu' );
-                    $field_type = self::get_field_type( $field_key );
-                    // Menu field should be a textarea
-                    $is_textarea = ( $field_key === 'menu' );
+                    // Observaciones is not required, all others are
+                    $is_required = ( $field_key !== 'observaciones' );
                 ?>
                 <div class="wc-custom-text-field">
                     <label for="text_field_<?php echo esc_attr( $field_key ); ?>">
@@ -294,25 +328,6 @@ class WC_Custom_Product_Addons {
                             <span class="required">*</span>
                         <?php endif; ?>
                     </label>
-                    <?php if ( $field_type === 'select' ) : ?>
-                        <select id="text_field_<?php echo esc_attr( $field_key ); ?>"
-                                name="text_field_<?php echo esc_attr( $field_key ); ?>"
-                                class="wc-custom-text-input"
-                                <?php echo $is_required ? 'required' : ''; ?>>
-                            <option value=""><?php esc_html_e( 'Seleccione una opción', 'wc-custom-addons' ); ?></option>
-                            <?php foreach ( self::$select_field_options[ $field_key ] as $option_value => $option_label ) : ?>
-                                <option value="<?php echo esc_attr( $option_value ); ?>"><?php echo esc_html( $option_label ); ?></option>
-                            <?php endforeach; ?>
-                        </select>
-                    <?php elseif ( $is_textarea ) : ?>
-                    <textarea
-                           id="text_field_<?php echo esc_attr( $field_key ); ?>"
-                           name="text_field_<?php echo esc_attr( $field_key ); ?>"
-                           class="wc-custom-text-input wc-custom-textarea"
-                           placeholder="<?php echo esc_attr( $field_label ); ?>"
-                           rows="4"
-                           <?php echo $is_required ? 'required' : ''; ?>></textarea>
-                    <?php else : ?>
                     <input type="text"
                            id="text_field_<?php echo esc_attr( $field_key ); ?>"
                            name="text_field_<?php echo esc_attr( $field_key ); ?>"
@@ -320,7 +335,6 @@ class WC_Custom_Product_Addons {
                            value=""
                            placeholder="<?php echo esc_attr( $field_label ); ?>"
                            <?php echo $is_required ? 'required' : ''; ?> />
-                    <?php endif; ?>
                 </div>
                 <?php endforeach; ?>
             </div>
@@ -399,8 +413,8 @@ class WC_Custom_Product_Addons {
         foreach ( self::$custom_text_fields as $field_key => $field_label ) {
             // Check if field is enabled for this product
             if ( get_post_meta( $product_id, '_enable_text_field_' . $field_key, true ) === 'yes' ) {
-                // Observaciones and menu are not required, all others are
-                if ( $field_key !== 'observaciones' && $field_key !== 'menu' ) {
+                // Observaciones is not required, all others are
+                if ( $field_key !== 'observaciones' ) {
                     $enabled_required_fields[ $field_key ] = $field_label;
                 }
             }
