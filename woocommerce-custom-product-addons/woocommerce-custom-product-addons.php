@@ -55,6 +55,7 @@ class WC_Custom_Product_Addons {
         'ano_curso'             => 'AÑO CURSO',
         'frase_texto'           => 'FRASE/TEXTO',
         'numero_cuenta'         => 'NUMERO CUENTA',
+        'menu'                  => 'MENÚ',
         'observaciones'         => 'OBSERVACIONES',
     );
 
@@ -320,6 +321,8 @@ class WC_Custom_Product_Addons {
                 <?php foreach ( $enabled_text_fields as $field_key => $field_label ) :
                     // Observaciones is not required, all others are
                     $is_required = ( $field_key !== 'observaciones' );
+                    // Menu field should be a textarea
+                    $is_textarea = ( $field_key === 'menu' );
                 ?>
                 <div class="wc-custom-text-field">
                     <label for="text_field_<?php echo esc_attr( $field_key ); ?>">
@@ -328,6 +331,15 @@ class WC_Custom_Product_Addons {
                             <span class="required">*</span>
                         <?php endif; ?>
                     </label>
+                    <?php if ( $is_textarea ) : ?>
+                    <textarea
+                           id="text_field_<?php echo esc_attr( $field_key ); ?>"
+                           name="text_field_<?php echo esc_attr( $field_key ); ?>"
+                           class="wc-custom-text-input wc-custom-textarea"
+                           placeholder="<?php echo esc_attr( $field_label ); ?>"
+                           rows="4"
+                           <?php echo $is_required ? 'required' : ''; ?>></textarea>
+                    <?php else : ?>
                     <input type="text"
                            id="text_field_<?php echo esc_attr( $field_key ); ?>"
                            name="text_field_<?php echo esc_attr( $field_key ); ?>"
@@ -335,6 +347,7 @@ class WC_Custom_Product_Addons {
                            value=""
                            placeholder="<?php echo esc_attr( $field_label ); ?>"
                            <?php echo $is_required ? 'required' : ''; ?> />
+                    <?php endif; ?>
                 </div>
                 <?php endforeach; ?>
             </div>
