@@ -3,7 +3,7 @@
  * Plugin Name: WooCommerce Custom Options
  * Plugin URI: https://github.com/luismallebrera/arlequin
  * Description: Personaliza opciones de WooCommerce: productos relacionados solo por categorías, cantidad y columnas configurables.
- * Version: 1.0.0
+ * Version: 1.1.0
  * Author: Luis Mallebrera
  * Author URI: https://github.com/luismallebrera
  * Text Domain: wc-options
@@ -55,6 +55,14 @@ class WC_Custom_Options {
         // Add custom RELATED field to products
         add_action( 'woocommerce_product_options_general_product_data', array( $this, 'add_related_custom_field' ) );
         add_action( 'woocommerce_process_product_meta', array( $this, 'save_related_custom_field' ) );
+        
+        // Quick Edit support
+        add_action( 'woocommerce_product_quick_edit_end', array( $this, 'add_related_quick_edit_field' ) );
+        add_action( 'woocommerce_product_bulk_edit_end', array( $this, 'add_related_bulk_edit_field' ) );
+        add_action( 'manage_product_posts_custom_column', array( $this, 'add_related_custom_column_data' ), 10, 2 );
+        add_action( 'woocommerce_product_quick_edit_save', array( $this, 'save_related_quick_edit_field' ) );
+        add_action( 'woocommerce_product_bulk_edit_save', array( $this, 'save_related_bulk_edit_field' ) );
+        add_action( 'admin_footer', array( $this, 'add_related_quick_edit_script' ) );
     }
 
     /**
@@ -234,6 +242,114 @@ class WC_Custom_Options {
     public function save_related_custom_field( $post_id ) {
         $related_value = isset( $_POST['_custom_related_field'] ) ? sanitize_text_field( $_POST['_custom_related_field'] ) : '';
         update_post_meta( $post_id, '_custom_related_field', $related_value );
+    }
+
+    /**
+     * Add RELATED field to Quick Edit
+     */
+    public function add_related_quick_edit_field() {
+        ?>
+        <br class="clear" />
+        <label class="alignleft">
+            <span class="title"><?php esc_html_e( 'RELATED', 'wc-options' ); ?></span>
+            <span class="input-text-wrap">
+                <input type="text" name="_custom_related_field" class="text" placeholder="<?php esc_attr_e( 'Etiqueta de productos relacionados', 'wc-options' ); ?>" value="">
+            </span>
+        </label>
+        <?php
+    }
+
+    /**
+     * Add RELATED field to Bulk Edit
+     */
+    public function add_related_bulk_edit_field() {
+        ?>
+        <label class="alignleft">
+            <span class="title"><?php esc_html_e( 'RELATED', 'wc-options' ); ?></span>
+            <span class="input-text-wrap">
+                <select name="_custom_related_field_bulk" class="text">
+                    <option value=""><?php esc_html_e( '— Sin cambios —', 'wc-options' ); ?></option>
+                    <option value="wc_options_clear"><?php esc_html_e( 'Borrar', 'wc-options' ); ?></option>
+                </select>
+                <input type="text" name="_custom_related_field" class="text" placeholder="<?php esc_attr_e( 'Etiqueta de productos relacionados', 'wc-options' ); ?>" value="">
+            </span>
+        </label>
+        <br class="clear" />
+        <?php
+    }
+
+    /**
+     * Add custom column data for Quick Edit to read
+     */
+    public function add_related_custom_column_data( $column, $post_id ) {
+        if ( $column === 'name' ) {
+            $related_value = get_post_meta( $post_id, '_custom_related_field', true );
+            echo '<div class="hidden wc-options-related-data" data-related="' . esc_attr( $related_value ) . '"></div>';
+        }
+    }
+
+    /**
+     * Save RELATED field from Quick Edit
+     */
+    public function save_related_quick_edit_field( $product ) {
+        if ( isset( $_REQUEST['_custom_related_field'] ) ) {
+            $product_id = is_object( $product ) ? $product->get_id() : $product;
+            $related_value = sanitize_text_field( $_REQUEST['_custom_related_field'] );
+            update_post_meta( $product_id, '_custom_related_field', $related_value );
+        }
+    }
+
+    /**
+     * Save RELATED field from Bulk Edit
+     */
+    public function save_related_bulk_edit_field( $product ) {
+        $product_id = is_object( $product ) ? $product->get_id() : $product;
+        
+        // Check if bulk edit action is set
+        if ( isset( $_REQUEST['_custom_related_field_bulk'] ) ) {
+            $bulk_action = sanitize_text_field( $_REQUEST['_custom_related_field_bulk'] );
+            
+            // Clear the field
+            if ( $bulk_action === 'wc_options_clear' ) {
+                update_post_meta( $product_id, '_custom_related_field', '' );
+            }
+            // Set new value
+            elseif ( isset( $_REQUEST['_custom_related_field'] ) && ! empty( $_REQUEST['_custom_related_field'] ) ) {
+                $related_value = sanitize_text_field( $_REQUEST['_custom_related_field'] );
+                update_post_meta( $product_id, '_custom_related_field', $related_value );
+            }
+        }
+    }
+
+    /**
+     * Add JavaScript for Quick Edit
+     */
+    public function add_related_quick_edit_script() {
+        global $current_screen;
+        
+        // Only load on product list page
+        if ( ! $current_screen || $current_screen->id !== 'edit-product' ) {
+            return;
+        }
+        ?>
+        <script type="text/javascript">
+        jQuery(function($) {
+            // Quick Edit
+            $('#the-list').on('click', '.editinline', function() {
+                var post_id = $(this).closest('tr').attr('id').replace('post-', '');
+                var $row = $('#post-' + post_id);
+                var $related_data = $row.find('.wc-options-related-data');
+                var related_value = $related_data.data('related') || '';
+                
+                // Set the value in quick edit
+                setTimeout(function() {
+                    var $quick_edit_row = $('#edit-' + post_id);
+                    $quick_edit_row.find('input[name="_custom_related_field"]').val(related_value);
+                }, 100);
+            });
+        });
+        </script>
+        <?php
     }
 }
 
