@@ -1,0 +1,96 @@
+/**
+ * Frontend Styles for Custom Product Buttons
+ * WooCommerce Custom Options
+ */
+
+.wc-custom-product-buttons-wrapper {
+    margin: 0 0 20px 0;
+}
+
+.wc-custom-product-buttons-title {
+    margin: 0 0 15px 0;
+    padding: 0;
+    font-size: 20px;
+    font-weight: 600;
+    color: #333;
+    line-height: 1.3;
+}
+
+.wc-custom-product-buttons {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+}
+
+a.wc-custom-product-button.button.alt {
+    display: inline-block;
+    padding: 6px 15px;
+    font-size: 18px !important;
+    font-weight: 800;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+    cursor: pointer;
+    white-space: nowrap;
+    width: auto !important;
+}
+
+a.wc-custom-product-button.button.alt:hover {
+    text-decoration: none;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+a.wc-custom-product-button.button.alt:active {
+    transform: translateY(0);
+}
+
+/* 
+ * Clases personalizadas basadas en el texto del botón
+ * Cada botón recibe una clase con el formato: wc-button-{texto-sanitizado}
+ * 
+ * Ejemplos de uso:
+ * 
+ * Texto del botón: "Ver talla grande"
+ * Clase generada: wc-button-ver-talla-grande
+ */
+
+/* Ejemplo 1: Botón "Ver talla grande" o "Ver talla L" */
+.wc-button-ver-talla-grande,
+.wc-button-ver-talla-l {
+    /* background-color: #2196F3; */
+    /* color: #ffffff; */
+}
+
+/* Ejemplo 2: Botón "Combina con" o productos relacionados */
+.wc-button-combina-con,
+.wc-button-ver-pack {
+    /* background-color: #4CAF50; */
+    /* color: #ffffff; */
+}
+
+/* Ejemplo 3: Botón "Versión premium" */
+.wc-button-version-premium {
+    /* background-color: #FFD700; */
+    /* color: #000000; */
+    /* border-color: #FFD700; */
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .wc-custom-product-buttons {
+        flex-direction: row;
+        align-items: stretch;
+    }
+    
+    .wc-custom-product-button {
+        width: 100%;
+        text-align: center;
+    }
+}

@@ -2,8 +2,8 @@
 /**
  * Plugin Name: WooCommerce Custom Options
  * Plugin URI: https://github.com/luismallebrera/arlequin
- * Description: Personaliza opciones de WooCommerce: productos relacionados, campo RELATED personalizado, y cantidad mínima por producto.
- * Version: 1.2.0
+ * Description: Personaliza opciones de WooCommerce: productos relacionados, campo RELATED personalizado, cantidad mínima por producto, y atributos condicionales.
+ * Version: 1.3.0
  * Author: Luis Mallebrera
  * Author URI: https://github.com/luismallebrera
  * Text Domain: wc-options
@@ -67,6 +67,9 @@ class WC_Custom_Options {
         // Minimum quantity support
         add_filter( 'woocommerce_quantity_input_args', array( $this, 'set_min_quantity' ), 10, 2 );
         add_filter( 'woocommerce_available_variation', array( $this, 'set_variation_min_quantity' ), 10, 3 );
+        
+        // Conditional attributes support
+        add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_conditional_attributes_scripts' ) );
     }
 
     /**
@@ -394,6 +397,36 @@ class WC_Custom_Options {
         });
         </script>
         <?php
+    }
+    
+    /**
+     * Enqueue conditional attributes scripts and styles
+     */
+    public function enqueue_conditional_attributes_scripts() {
+        // Only load on product pages
+        if ( ! is_product() ) {
+            return;
+        }
+        
+        $plugin_url = plugin_dir_url( __FILE__ );
+        $version = '1.3.0';
+        
+        // Enqueue CSS
+        wp_enqueue_style(
+            'wc-options-conditional-attributes',
+            $plugin_url . 'assets/css/conditional-attributes.css',
+            array(),
+            $version
+        );
+        
+        // Enqueue JavaScript
+        wp_enqueue_script(
+            'wc-options-conditional-attributes',
+            $plugin_url . 'assets/js/conditional-attributes.js',
+            array( 'jquery' ),
+            $version,
+            true
+        );
     }
     
     /**

@@ -1,0 +1,108 @@
+/**
+ * Admin Styles for Custom Product Buttons Tab
+ * WooCommerce Custom Options
+ */
+
+/* Tab icon */
+#woocommerce-product-data ul.wc-tabs li.custom_buttons_options a:before {
+    content: "\f103";
+    font-family: "Dashicons";
+}
+
+/* Panel styling */
+#custom_buttons_product_data {
+    padding: 0 !important;
+}
+
+#custom_buttons_product_data .options_group {
+    padding: 0;
+    margin: 0;
+    border: none;
+}
+
+/* Button rows */
+.custom-button-row {
+    background: #fff;
+    padding: 16px;
+    margin-bottom: 1px;
+    border-bottom: 1px solid #e5e5e5;
+    position: relative;
+    transition: background 0.2s ease;
+}
+
+.custom-button-row:hover {
+    background: #f9f9f9;
+}
+
+.custom-button-row label {
+    display: block;
+    margin: 0 !important;
+    width: 200px;
+    font-weight: 600;
+    color: #23282d;
+}
+
+.custom-button-row div {
+    display: flex;
+    margin-bottom: 10px;
+    align-items: center;
+}
+
+.custom-button-row .wc-product-search,
+.custom-button-row input[type="text"] {
+    width: 100%;
+    max-width: 100%;
+}
+
+.custom-button-row .select2-container {
+    float: left;
+    width: 100% !important;
+}
+
+.custom-button-row .remove-custom-button {
+    position: relative;
+    top: 0;
+    right: 0px;
+    color: #b32d2e;
+    border-color: #b32d2e;
+    padding: 4px 12px;
+    font-size: 12px;
+    height: auto;
+    line-height: 1.5;
+}
+
+.custom-button-row .remove-custom-button:hover {
+    background: #b32d2e;
+    color: #fff;
+    border-color: #b32d2e;
+}
+
+/* Add button area */
+#custom_buttons_product_data .add-custom-button {
+    margin-top: 12px;
+}
+
+#custom_buttons_product_data .add-custom-button .dashicons {
+    vertical-align: middle;
+}
+
+/* No buttons message */
+.no-buttons-message {
+    padding: 20px 12px;
+    margin: 0 !important;
+    text-align: center;
+}
+
+/* Responsive */
+@media (max-width: 782px) {
+    .custom-button-row {
+        padding-right: 16px;
+        padding-bottom: 50px;
+    }
+    
+    .custom-button-row .remove-custom-button {
+        position: static;
+        width: 100%;
+        margin-top: 12px;
+    }
+}
