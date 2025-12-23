@@ -2,8 +2,8 @@
 /**
  * Plugin Name: WooCommerce Custom Options
  * Plugin URI: https://github.com/luismallebrera/arlequin
- * Description: Personaliza opciones de WooCommerce: productos relacionados solo por categorías, cantidad y columnas configurables.
- * Version: 1.1.0
+ * Description: Personaliza opciones de WooCommerce: productos relacionados, campo RELATED personalizado, y cantidad mínima por producto.
+ * Version: 1.2.0
  * Author: Luis Mallebrera
  * Author URI: https://github.com/luismallebrera
  * Text Domain: wc-options
@@ -63,6 +63,10 @@ class WC_Custom_Options {
         add_action( 'woocommerce_product_quick_edit_save', array( $this, 'save_related_quick_edit_field' ) );
         add_action( 'woocommerce_product_bulk_edit_save', array( $this, 'save_related_bulk_edit_field' ) );
         add_action( 'admin_footer', array( $this, 'add_related_quick_edit_script' ) );
+        
+        // Minimum quantity support
+        add_filter( 'woocommerce_quantity_input_args', array( $this, 'set_min_quantity' ), 10, 2 );
+        add_filter( 'woocommerce_available_variation', array( $this, 'set_variation_min_quantity' ), 10, 3 );
     }
 
     /**
@@ -233,6 +237,32 @@ class WC_Custom_Options {
             'description' => __( 'Productos con la misma etiqueta se mostrarán como relacionados (ej: "verano", "boda", "pack-especial"). Solo funciona si seleccionas "Campo personalizado RELATED" en los ajustes.', 'wc-options' ),
         ) );
         
+        woocommerce_wp_text_input( array(
+            'id'          => '_min_quantity',
+            'label'       => __( 'Cantidad Mínima', 'wc-options' ),
+            'placeholder' => '1',
+            'desc_tip'    => true,
+            'description' => __( 'Cantidad mínima que el cliente debe comprar de este producto. Déjalo vacío para usar 1 por defecto.', 'wc-options' ),
+            'type'        => 'number',
+            'custom_attributes' => array(
+                'step' => '1',
+                'min'  => '1',
+            ),
+        ) );
+        
+        woocommerce_wp_text_input( array(
+            'id'          => '_quantity_step',
+            'label'       => __( 'Incremento de Cantidad', 'wc-options' ),
+            'placeholder' => '1',
+            'desc_tip'    => true,
+            'description' => __( 'Cantidad que se incrementa o decrementa al hacer clic en los botones +/-. Por ejemplo, si estableces 5, cada clic aumentará o disminuirá la cantidad en 5 unidades.', 'wc-options' ),
+            'type'        => 'number',
+            'custom_attributes' => array(
+                'step' => '1',
+                'min'  => '1',
+            ),
+        ) );
+        
         echo '</div>';
     }
 
@@ -242,6 +272,20 @@ class WC_Custom_Options {
     public function save_related_custom_field( $post_id ) {
         $related_value = isset( $_POST['_custom_related_field'] ) ? sanitize_text_field( $_POST['_custom_related_field'] ) : '';
         update_post_meta( $post_id, '_custom_related_field', $related_value );
+        
+        $min_quantity = isset( $_POST['_min_quantity'] ) ? absint( $_POST['_min_quantity'] ) : '';
+        if ( $min_quantity > 0 ) {
+            update_post_meta( $post_id, '_min_quantity', $min_quantity );
+        } else {
+            delete_post_meta( $post_id, '_min_quantity' );
+        }
+        
+        $quantity_step = isset( $_POST['_quantity_step'] ) ? absint( $_POST['_quantity_step'] ) : '';
+        if ( $quantity_step > 0 ) {
+            update_post_meta( $post_id, '_quantity_step', $quantity_step );
+        } else {
+            delete_post_meta( $post_id, '_quantity_step' );
+        }
     }
 
     /**
@@ -350,6 +394,70 @@ class WC_Custom_Options {
         });
         </script>
         <?php
+    }
+    
+    /**
+     * Set minimum quantity for products
+     */
+    public function set_min_quantity( $args, $product ) {
+        if ( ! $product ) {
+            return $args;
+        }
+        
+        $min_quantity = get_post_meta( $product->get_id(), '_min_quantity', true );
+        
+        if ( $min_quantity && $min_quantity > 1 ) {
+            $min_quantity = absint( $min_quantity );
+            $args['min_value'] = $min_quantity;
+            // Always start at minimum quantity or higher
+            $args['input_value'] = isset( $args['input_value'] ) && $args['input_value'] > $min_quantity 
+                ? $args['input_value'] 
+                : $min_quantity;
+        }
+        
+        // Set quantity step
+        $quantity_step = get_post_meta( $product->get_id(), '_quantity_step', true );
+        if ( $quantity_step && $quantity_step > 1 ) {
+            $args['step'] = absint( $quantity_step );
+        }
+        
+        return $args;
+    }
+    
+    /**
+     * Set minimum quantity for product variations
+     */
+    public function set_variation_min_quantity( $data, $product, $variation ) {
+        $min_quantity = get_post_meta( $variation->get_id(), '_min_quantity', true );
+        
+        if ( ! $min_quantity ) {
+            // Check parent product if variation doesn't have min quantity
+            $min_quantity = get_post_meta( $product->get_id(), '_min_quantity', true );
+        }
+        
+        if ( $min_quantity && $min_quantity > 1 ) {
+            $min_quantity = absint( $min_quantity );
+            $data['min_qty'] = $min_quantity;
+            // Set max_qty to prevent values below minimum
+            $data['max_qty'] = isset( $data['max_qty'] ) ? max( $data['max_qty'], $min_quantity ) : '';
+            // Ensure initial quantity value starts at minimum
+            if ( ! isset( $data['is_in_stock'] ) || $data['is_in_stock'] ) {
+                $data['min_qty'] = $min_quantity;
+            }
+        }
+        
+        // Set quantity step for variations
+        $quantity_step = get_post_meta( $variation->get_id(), '_quantity_step', true );
+        if ( ! $quantity_step ) {
+            // Check parent product if variation doesn't have quantity step
+            $quantity_step = get_post_meta( $product->get_id(), '_quantity_step', true );
+        }
+        
+        if ( $quantity_step && $quantity_step > 1 ) {
+            $data['step'] = absint( $quantity_step );
+        }
+        
+        return $data;
     }
 }
 

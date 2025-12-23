@@ -1,0 +1,70 @@
+ID,Title,total_fields,field_1_title,field_1_enabled,field_2_title,field_2_enabled,field_3_title,field_3_enabled,field_4_title,field_4_enabled,,,_enable_text_field_frase_texto,_enable_text_field_numero_cuenta,_enable_text_field_menu
+26578,"LIBRO DE FIRMAS DE TELA DE BODA colección ""flores moradas""",5,NOMBRE NOVIOS,on,,off,,off,,off,,,off,off,off
+26588,"LIBRO DE FIRMAS DE TELA DE BODA COLECCIÓN  ""ramas eucalipto""",5,NOMBRE NOVIOS,on,,off,,off,,off,,,off,off,off
+27632,"INVITACIÓN BODA colección ""HORTENSIA""",5,NOMBRE NOVIOS,on,FECHA BODA,on,"FRASE/TEXTO
+",on,LOCALIDAD,off,,,on,off,off
+27640,"ETIQUETA CUADRADA BODA colección ""HORTENSIA""",4,NOMBRE NOVIOS,on,FECHA BODA,on,IGLESIA,off,LOCALIDAD,off,,,off,off,off
+27647,"ETIQUETAS REDONDAS BODA colección ""HORTENSIA""",2,NOMBRE NOVIOS,on,FECHA BODA,on,,off,,off,,,off,off,off
+27659,"TARJETA LISTA DE BODA colección ""HORTENSIA""",3,NOMBRE NOVIOS,on,FRASE/TEXTO,on,NUMERO CUENTA,on,,off,,,on,on,off
+27662,"MENÚ DE BODA colección ""HORTENSIA""",3,NOMBRE NOVIOS,on,FECHA BODA,on,MENÚ,on,,off,,,off,off,on
+27668,"TARJETA AGRADECIMIENTO colección ""HORTENSIA""",3,NOMBRE NOVIOS,on,FRASE/TEXTO,on,NUMERO CUENTA,on,,off,,,on,on,off
+27674,"TARJETA PARA NOMBRES DE MESAS colección ""HORTENSIA""",3,NOMBRE NOVIOS,on,FECHA BODA,on,MENÚ,on,,off,,,off,off,on
+27675,"MISAL colección ""HORTENSIA""",3,NOMBRE NOVIOS,on,FECHA BODA,on,MENÚ,on,,off,,,off,off,on
+27676,"MESERO colección ""HORTENSIA""",3,NOMBRE NOVIOS,on,FECHA BODA,on,MENÚ,on,,off,,,off,off,on
+27680,"INVITACIÓN BODA colección ""GRANATE""",5,NOMBRE NOVIOS,on,FECHA BODA,on,"FRASE/TEXTO
+",on,LOCALIDAD,off,,,on,off,off
+27693,"MESERO colección ""GRANATE""",3,NOMBRE NOVIOS,on,FECHA BODA,on,MENÚ,on,,off,,,off,off,on
+27694,"TARJETA PARA NOMBRES DE MESAS colección ""GRANATE""",3,NOMBRE NOVIOS,on,FECHA BODA,on,MENÚ,on,,off,,,off,off,on
+27696,"MENÚ DE BODA colección ""GRANATE""",3,NOMBRE NOVIOS,on,FECHA BODA,on,MENÚ,on,,off,,,off,off,on
+27697,"TARJETA LISTA DE BODA colección ""GRANATE""",3,NOMBRE NOVIOS,on,FRASE/TEXTO,on,NUMERO CUENTA,on,,off,,,on,on,off
+27703,"TARJETA AGRADECIMIENTO colección ""GRANATE""",3,NOMBRE NOVIOS,on,FRASE/TEXTO,on,NUMERO CUENTA,on,,off,,,on,on,off
+27709,"MISAL colección ""GRANATE""",3,NOMBRE NOVIOS,on,FECHA BODA,on,MENÚ,on,,off,,,off,off,on
+27712,"ETIQUETAS REDONDAS BODA colección ""GRANATE""",2,NOMBRE NOVIOS,on,FECHA BODA,on,,off,,off,,,off,off,off
+27716,"ETIQUETA CUADRADA BODA colección ""GRANATE""",4,NOMBRE NOVIOS,on,FECHA BODA,on,IGLESIA,off,LOCALIDAD,off,,,off,off,off
+27735,LLAVERO CON BOLA DE MADERA Y COLGANTE INICIAL,3,NOMBRE NOVIOS/NIÑO,on,FECHA EVENTO,on,INICIAL,on,,off,,,off,off,off
+27810,"INVITACIÓN BODA colección ""CORONA FRAMBUESA""",5,NOMBRE NOVIOS,on,FECHA BODA,on,"FRASE/TEXTO
+",on,LOCALIDAD,off,,,on,off,off
+27827,"ETIQUETA CUADRADA BODA colección ""CORONA FRAMBUESA""",4,NOMBRE NOVIOS,on,FECHA BODA,on,IGLESIA,off,LOCALIDAD,off,,,off,off,off
+27834,"ETIQUETA CUADRADA BODA colección ""CORONA FRAMBUESA""",4,NOMBRE NOVIOS,on,FECHA BODA,on,IGLESIA,off,LOCALIDAD,off,,,off,off,off
+27843,"MENÚ DE BODA colección ""CORONA FRAMBUESA""",3,NOMBRE NOVIOS,on,FECHA BODA,on,MENÚ,on,,off,,,off,off,on
+27844,"MESERO colección ""CORONA FRAMBUESA""",3,NOMBRE NOVIOS,on,FECHA BODA,on,MENÚ,on,,off,,,off,off,on
+27847,"TARJETA PARA NOMBRES DE MESAS colección ""CORONA FRAMBUESA""",3,NOMBRE NOVIOS,on,FECHA BODA,on,MENÚ,on,,off,,,off,off,on
+27848,"TARJETA LISTA DE BODA colección ""CORONA FRAMBUESA""",3,NOMBRE NOVIOS,on,FRASE/TEXTO,on,NUMERO CUENTA,on,,off,,,on,on,off
+27851,"TARJETA AGRADECIMIENTO colección ""CORONA FRAMBUESA""",3,NOMBRE NOVIOS,on,FRASE/TEXTO,on,NUMERO CUENTA,on,,off,,,on,on,off
+27854,"MISAL colección ""CORONA FRAMBUESA""",3,NOMBRE NOVIOS,on,FECHA BODA,on,IGLESIA,on,,off,,,off,off,off
+28062,"MISAL colección ""CAMPESTRE""",3,NOMBRE NOVIOS,on,FECHA BODA,on,IGLESIA,on,,off,,,off,off,off
+28079,"TARJETA AGRADECIMIENTO colección ""CAMPESTRE""",3,NOMBRE NOVIOS,on,FRASE/TEXTO,on,NUMERO CUENTA,on,,off,,,on,on,off
+28082,"TARJETA LISTA DE BODA colección ""CAMPESTRE""",3,NOMBRE NOVIOS,on,FRASE/TEXTO,on,NUMERO CUENTA,on,,off,,,on,on,off
+28085,"TARJETA PARA NOMBRES DE MESAS colección ""CAMPESTRE""",3,NOMBRE NOVIOS,on,FECHA BODA,on,MENÚ,on,,off,,,off,off,on
+28087,"MENÚ DE BODA colección ""CAMPESTRE""",3,NOMBRE NOVIOS,on,FECHA BODA,on,MENÚ,on,,off,,,off,off,on
+28088,"INVITACIÓN BODA colección ""CAMPESTRE""",5,NOMBRE NOVIOS,on,FECHA BODA,on,"FRASE/TEXTO
+",on,LOCALIDAD,off,,,on,off,off
+28096,"ETIQUETA REDONDA BODA colección ""CAMPESTRE""",4,NOMBRE NOVIOS,on,FECHA BODA,on,IGLESIA,off,LOCALIDAD,off,,,off,off,off
+28101,"ETIQUETA CUADRADA BODA colección ""CAMPESTRE""",4,NOMBRE NOVIOS,on,FECHA BODA,on,IGLESIA,off,LOCALIDAD,off,,,off,off,off
+28109,"ETIQUETA REDONDA BODA colección ""LILA""",4,NOMBRE NOVIOS,on,FECHA BODA,on,IGLESIA,off,LOCALIDAD,off,,,off,off,off
+28136,"ETIQUETA CUADRADA BODA colección ""LILA""",4,NOMBRE NOVIOS,on,FECHA BODA,on,IGLESIA,off,LOCALIDAD,off,,,off,off,off
+28146,"MENÚ DE BODA colección ""LILA""",3,NOMBRE NOVIOS,on,FECHA BODA,on,MENÚ,on,,off,,,off,off,on
+28148,"TARJETA PARA NOMBRES DE MESAS colección ""LILA""",3,NOMBRE NOVIOS,on,FECHA BODA,on,MENÚ,on,,off,,,off,off,on
+28152,"INVITACIÓN BODA colección ""LILA""",5,NOMBRE NOVIOS,on,FECHA BODA,on,"FRASE/TEXTO
+",on,LOCALIDAD,off,,,on,off,off
+28162,"TARJETA LISTA DE BODA colección ""LILA""",3,NOMBRE NOVIOS,on,FRASE/TEXTO,on,NUMERO CUENTA,on,,off,,,on,on,off
+28165,"TARJETA AGRADECIMIENTO colección ""LILA""",3,NOMBRE NOVIOS,on,FRASE/TEXTO,on,NUMERO CUENTA,on,,off,,,on,on,off
+28170,"MISAL colección ""LILA""",3,NOMBRE NOVIOS,on,FECHA BODA,on,MENÚ,on,,off,,,off,off,on
+28171,"MESERO colección ""LILA""",3,NOMBRE NOVIOS,on,FECHA BODA,on,MENÚ,on,,off,,,off,off,on
+28172,"MESERO colección ""CAMPESTRE""",3,NOMBRE NOVIOS,on,FECHA BODA,on,MENÚ,on,,off,,,off,off,on
+28326,LLAVERO CON INICIAL DE MADERA,4,NOMBRE NOVIOS/NIÑO,on,FECHA EVENTO,on,INICIAL ,on,OBSERVACIONES,on,,,off,off,off
+28336,LLAVERO DE MADERA CON CRUZ O ESTRELLA,3,NOMBRE NOVIOS/NIÑO,on,FECHA EVENTO,on,OBSERVACIONES,on,,off,,,off,off,off
+32512,KIT PARA FIESTA - SIRENA,,,off,,off,,off,,off,,,off,off,off
+32712,"TARJETA PARA NOMBRES DE MESAS colección ""HORTENSIA""",,,off,,off,,off,,off,,,off,off,off
+32717,"MESERO colección ""CORONA FRAMBUESA""",,,off,,off,,off,,off,,,off,off,off
+32718,"MISAL colección ""CAMPESTRE""",,,off,,off,,off,,off,,,off,off,off
+32726,"MENÚ DE BODA colección ""LILA""",,,off,,off,,off,,off,,,off,off,off
+32727,"TARJETA PARA NOMBRES DE MESAS colección ""LILA""",1,,off,,off,,off,,off,,,off,off,off
+32728,"MISAL colección ""LILA""",,,off,,off,,off,,off,,,off,off,off
+32729,"MESERO colección ""CAMPESTRE""",,,off,,off,,off,,off,,,off,off,off
+38611,PACK DE LLAVEROS CON INICIAL DE MADERA,4,NOMBRE NOVIOS/NIÑO,on,FECHA EVENTO,on,INICIAL ,on,OBSERVACIONES,on,,,off,off,off
+39083,PACK LLAVERO DE MADERA CON CRUZ O ESTRELLA,3,NOMBRE NOVIOS/NIÑO,on,FECHA EVENTO,on,OBSERVACIONES,on,,off,,,off,off,off
+40547,PACK COMUNIÓN PREMIUM - DIBUJO NIÑA TIPO ACUARELA,1,,off,,off,,off,,off,,,off,off,off
+40577,PACK COMUNIÓN PREMIUM - DIBUJO DE NIÑO TIPO ACUARELA,0,,off,,off,,off,,off,,,off,off,off
+40594,PACK COMUNIÓN PREMIUM -  BALÓN DE FÚTBOL,1,,off,,off,,off,,off,,,off,off,off
+40608,PACK COMUNIÓN ESENCIAL - CORONA DE FLORES,1,,off,,off,,off,,off,,,off,off,off
