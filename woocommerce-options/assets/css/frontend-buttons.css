@@ -7,13 +7,12 @@
     margin: 0 0 20px 0;
 }
 
-.wc-custom-product-buttons-title {
-    margin: 0 0 15px 0;
-    padding: 0;
+.wc-custom-buttons-title {
     font-size: 20px;
     font-weight: 600;
+    margin: 0 0 12px 0;
+    padding: 0;
     color: #333;
-    line-height: 1.3;
 }
 
 .wc-custom-product-buttons {
@@ -49,6 +48,19 @@ a.wc-custom-product-button.button.alt:hover {
 
 a.wc-custom-product-button.button.alt:active {
     transform: translateY(0);
+}
+
+/* Current button styling */
+a.wc-custom-product-button.button.alt.is-current {
+    opacity: 0.6;
+    cursor: default;
+    pointer-events: none;
+    position: relative;
+}
+
+a.wc-custom-product-button.button.alt.is-current:after {
+    content: " ✓";
+    font-weight: bold;
 }
 
 /* 

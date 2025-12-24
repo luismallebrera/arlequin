@@ -105,6 +105,12 @@
                     </label>
                     <input type="text" name="_custom_product_buttons[${buttonIndex}][button_text]" value="" placeholder="Ver producto">
                 </div>
+                <div style="margin-bottom: 0;">
+                    <label style="width: auto; display: inline-flex; align-items: center; cursor: pointer;">
+                        <input type="checkbox" name="_custom_product_buttons[${buttonIndex}][is_current]" value="1" style="margin: 0 6px 0 0;">
+                        Botón actual (producto activo)
+                    </label>
+                </div>
                 <button type="button" class="button remove-custom-button">
                     Eliminar
                 </button>

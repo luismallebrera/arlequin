@@ -2,8 +2,8 @@
 /**
  * Plugin Name: WooCommerce Custom Options
  * Plugin URI: https://github.com/luismallebrera/arlequin
- * Description: Personaliza opciones de WooCommerce: productos relacionados, campo RELATED personalizado, cantidad mínima por producto, y atributos condicionales.
- * Version: 1.3.0
+ * Description: Personaliza opciones de WooCommerce: productos relacionados, campo RELATED personalizado, cantidad mínima por producto y botones personalizados de productos.
+ * Version: 1.5.1
  * Author: Luis Mallebrera
  * Author URI: https://github.com/luismallebrera
  * Text Domain: wc-options
@@ -11,7 +11,7 @@
  * Requires at least: 5.8
  * Requires PHP: 7.4
  * WC requires at least: 5.0
- * WC tested up to: 8.0
+ * WC tested up to: 9.5
  * License: GPL v2 or later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  */
@@ -31,6 +31,17 @@ class WC_Custom_Options {
      */
     public function __construct() {
         add_action( 'plugins_loaded', array( $this, 'init' ) );
+        add_action( 'before_woocommerce_init', array( $this, 'declare_compatibility' ) );
+    }
+    
+    /**
+     * Declare compatibility with WooCommerce features
+     */
+    public function declare_compatibility() {
+        if ( class_exists( '\Automattic\WooCommerce\Utilities\FeaturesUtil' ) ) {
+            \Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'custom_order_tables', __FILE__, true );
+            \Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'cart_checkout_blocks', __FILE__, true );
+        }
     }
 
     /**
@@ -68,8 +79,13 @@ class WC_Custom_Options {
         add_filter( 'woocommerce_quantity_input_args', array( $this, 'set_min_quantity' ), 10, 2 );
         add_filter( 'woocommerce_available_variation', array( $this, 'set_variation_min_quantity' ), 10, 3 );
         
-        // Conditional attributes support
-        add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_conditional_attributes_scripts' ) );
+        // Custom product buttons
+        add_action( 'woocommerce_before_variations_form', array( $this, 'display_custom_product_buttons' ) );
+        add_action( 'woocommerce_before_add_to_cart_form', array( $this, 'display_custom_product_buttons' ) );
+        add_filter( 'woocommerce_product_data_tabs', array( $this, 'add_custom_buttons_tab' ) );
+        add_action( 'woocommerce_product_data_panels', array( $this, 'add_custom_buttons_tab_content' ) );
+        add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_scripts' ) );
+        add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_frontend_styles' ) );
     }
 
     /**
@@ -289,6 +305,9 @@ class WC_Custom_Options {
         } else {
             delete_post_meta( $post_id, '_quantity_step' );
         }
+        
+        // Save custom product buttons
+        $this->save_custom_buttons_fields( $post_id );
     }
 
     /**
@@ -400,36 +419,6 @@ class WC_Custom_Options {
     }
     
     /**
-     * Enqueue conditional attributes scripts and styles
-     */
-    public function enqueue_conditional_attributes_scripts() {
-        // Only load on product pages
-        if ( ! is_product() ) {
-            return;
-        }
-        
-        $plugin_url = plugin_dir_url( __FILE__ );
-        $version = '1.3.0';
-        
-        // Enqueue CSS
-        wp_enqueue_style(
-            'wc-options-conditional-attributes',
-            $plugin_url . 'assets/css/conditional-attributes.css',
-            array(),
-            $version
-        );
-        
-        // Enqueue JavaScript
-        wp_enqueue_script(
-            'wc-options-conditional-attributes',
-            $plugin_url . 'assets/js/conditional-attributes.js',
-            array( 'jquery' ),
-            $version,
-            true
-        );
-    }
-    
-    /**
      * Set minimum quantity for products
      */
     public function set_min_quantity( $args, $product ) {
@@ -491,6 +480,327 @@ class WC_Custom_Options {
         }
         
         return $data;
+    }
+    
+    /**
+     * Add custom buttons tab to product data
+     */
+    public function add_custom_buttons_tab( $tabs ) {
+        $tabs['custom_buttons'] = array(
+            'label'    => __( 'Botones', 'wc-options' ),
+            'target'   => 'custom_buttons_product_data',
+            'class'    => array( 'show_if_simple', 'show_if_variable' ),
+            'priority' => 80,
+        );
+        return $tabs;
+    }
+    
+    /**
+     * Add custom buttons tab content
+     */
+    public function add_custom_buttons_tab_content() {
+        global $post;
+        
+        ?>
+        <div id="custom_buttons_product_data" class="panel woocommerce_options_panel">
+            <div class="options_group custom-product-buttons-group">
+                <p style="padding: 12px; margin: 0; color: #666; background: #f9f9f9; border-bottom: 1px solid #ddd;">
+                    <?php esc_html_e( 'Añade botones que enlacen a otros productos. Estos botones aparecerán antes del formulario de compra.', 'wc-options' ); ?>
+                </p>
+                
+                <?php
+                $buttons = get_post_meta( $post->ID, '_custom_product_buttons', true );
+                if ( ! is_array( $buttons ) ) {
+                    $buttons = array();
+                }
+                $buttons_title = get_post_meta( $post->ID, '_custom_buttons_title', true );
+                ?>
+                
+                <div style="padding: 12px; border-bottom: 1px solid #e5e5e5;">
+                    <label style="display: block; margin-bottom: 6px; font-weight: 600;">
+                        <?php esc_html_e( 'Título de la sección (opcional):', 'wc-options' ); ?>
+                    </label>
+                    <input type="text" name="_custom_buttons_title" value="<?php echo esc_attr( $buttons_title ); ?>" placeholder="<?php esc_attr_e( 'Ejemplo: Disponible también en:', 'wc-options' ); ?>" style="width: 100%; max-width: 500px;">
+                    <p class="description" style="margin-top: 6px;">
+                        <?php esc_html_e( 'Este título aparecerá encima de los botones en la página del producto.', 'wc-options' ); ?>
+                    </p>
+                </div>
+                
+                <div id="custom-buttons-container" style="padding: 12px;">
+                    <?php
+                    if ( empty( $buttons ) ) {
+                        echo '<p class="no-buttons-message" style="color: #999; font-style: italic;">' . __( 'No hay botones configurados. Haz clic en "Añadir Botón" para crear uno.', 'wc-options' ) . '</p>';
+                    } else {
+                        foreach ( $buttons as $index => $button ) {
+                            $this->render_button_fields( $index, $button );
+                        }
+                    }
+                    ?>
+                </div>
+                
+                <p style="padding: 0 12px 12px 12px;">
+                    <button type="button" class="button button-primary add-custom-button" id="add-custom-button">
+                        <span class="dashicons dashicons-plus-alt" style="margin-top: 3px;"></span>
+                        <?php esc_html_e( 'Añadir Botón', 'wc-options' ); ?>
+                    </button>
+                </p>
+            </div>
+        </div>
+        <?php
+    }
+    
+    /**
+     * Render button fields
+     */
+    private function render_button_fields( $index, $button = array() ) {
+        $product_id = isset( $button['product_id'] ) ? $button['product_id'] : '';
+        $button_text = isset( $button['button_text'] ) ? $button['button_text'] : '';
+        $is_current = isset( $button['is_current'] ) ? $button['is_current'] : false;
+        
+        ?>
+        <div class="custom-button-row">
+            <div>
+                <label>
+                    <?php esc_html_e( 'Producto de destino:', 'wc-options' ); ?>
+                </label>
+                <select name="_custom_product_buttons[<?php echo esc_attr( $index ); ?>][product_id]" class="wc-product-search" data-placeholder="<?php esc_attr_e( 'Buscar producto...', 'wc-options' ); ?>" data-allow_clear="true">
+                    <?php if ( $product_id ) : 
+                        $product = wc_get_product( $product_id );
+                        if ( $product ) : ?>
+                            <option value="<?php echo esc_attr( $product_id ); ?>" selected="selected">
+                                <?php echo esc_html( $product->get_name() ) . ' (#' . $product_id . ')'; ?>
+                            </option>
+                        <?php endif;
+                    endif; ?>
+                </select>
+            </div>
+            <div>
+                <label>
+                    <?php esc_html_e( 'Texto del botón:', 'wc-options' ); ?>
+                </label>
+                <input type="text" name="_custom_product_buttons[<?php echo esc_attr( $index ); ?>][button_text]" value="<?php echo esc_attr( $button_text ); ?>" placeholder="<?php esc_attr_e( 'Ver producto', 'wc-options' ); ?>">
+            </div>
+            <div style="margin-bottom: 0;">
+                <label style="width: auto; display: inline-flex; align-items: center; cursor: pointer;">
+                    <input type="checkbox" name="_custom_product_buttons[<?php echo esc_attr( $index ); ?>][is_current]" value="1" <?php checked( $is_current, true ); ?> style="margin: 0 6px 0 0;">
+                    <?php esc_html_e( 'Botón actual (producto activo)', 'wc-options' ); ?>
+                </label>
+            </div>
+            <button type="button" class="button remove-custom-button">
+                <?php esc_html_e( 'Eliminar', 'wc-options' ); ?>
+            </button>
+        </div>
+        <?php
+    }
+    
+    /**
+     * Save custom buttons fields
+     */
+    public function save_custom_buttons_fields( $post_id ) {
+        // Check if we have the nonce (WooCommerce sets it)
+        if ( ! isset( $_POST['woocommerce_meta_nonce'] ) ) {
+            return;
+        }
+        
+        // Verify nonce
+        if ( ! wp_verify_nonce( $_POST['woocommerce_meta_nonce'], 'woocommerce_save_data' ) ) {
+            return;
+        }
+        
+        // Check autosave
+        if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+            return;
+        }
+        
+        // Check permissions
+        if ( ! current_user_can( 'edit_post', $post_id ) ) {
+            return;
+        }
+        
+        $buttons = array();
+        
+        // Debug: Log what we're receiving
+        error_log( 'Custom Product Buttons POST data: ' . print_r( $_POST['_custom_product_buttons'] ?? 'NOT SET', true ) );
+        
+        if ( isset( $_POST['_custom_product_buttons'] ) && is_array( $_POST['_custom_product_buttons'] ) ) {
+            foreach ( $_POST['_custom_product_buttons'] as $button ) {
+                $product_id = isset( $button['product_id'] ) ? absint( $button['product_id'] ) : 0;
+                $button_text = isset( $button['button_text'] ) ? sanitize_text_field( $button['button_text'] ) : '';
+                $is_current = isset( $button['is_current'] ) && $button['is_current'] === '1';
+                
+                error_log( "Processing button - Product ID: $product_id, Text: $button_text, Is Current: " . ( $is_current ? 'YES' : 'NO' ) );
+                
+                // Only save if both product ID and button text are provided
+                if ( $product_id && $button_text ) {
+                    $buttons[] = array(
+                        'product_id'  => $product_id,
+                        'button_text' => $button_text,
+                        'is_current'  => $is_current,
+                    );
+                }
+            }
+        }
+        
+        error_log( 'Buttons to save: ' . print_r( $buttons, true ) );
+        
+        if ( ! empty( $buttons ) ) {
+            $result = update_post_meta( $post_id, '_custom_product_buttons', $buttons );
+            error_log( 'Update result: ' . ( $result ? 'SUCCESS' : 'FAILED' ) );
+        } else {
+            delete_post_meta( $post_id, '_custom_product_buttons' );
+            error_log( 'Deleted meta (no buttons)' );
+        }
+        
+        // Save buttons title
+        if ( isset( $_POST['_custom_buttons_title'] ) ) {
+            $buttons_title = sanitize_text_field( $_POST['_custom_buttons_title'] );
+            if ( ! empty( $buttons_title ) ) {
+                update_post_meta( $post_id, '_custom_buttons_title', $buttons_title );
+            } else {
+                delete_post_meta( $post_id, '_custom_buttons_title' );
+            }
+        }
+    }
+    
+    /**
+     * Display custom product buttons on frontend
+     */
+    public function display_custom_product_buttons() {
+        global $product;
+        
+        if ( ! $product ) {
+            return;
+        }
+        
+        // Prevent duplicate display - only show once
+        static $displayed = false;
+        if ( $displayed ) {
+            return;
+        }
+        $displayed = true;
+        
+        $buttons = get_post_meta( $product->get_id(), '_custom_product_buttons', true );
+        
+        if ( ! is_array( $buttons ) || empty( $buttons ) ) {
+            return;
+        }
+        
+        // Get the custom title
+        $buttons_title = get_post_meta( $product->get_id(), '_custom_buttons_title', true );
+        
+        echo '<div class="wc-custom-product-buttons-wrapper">';
+        
+        // Display title if set
+        if ( ! empty( $buttons_title ) ) {
+            echo '<h3 class="wc-custom-buttons-title">' . esc_html( $buttons_title ) . '</h3>';
+        }
+        
+        echo '<div class="wc-custom-product-buttons">';
+        
+        foreach ( $buttons as $button ) {
+            $product_id = isset( $button['product_id'] ) ? absint( $button['product_id'] ) : 0;
+            $button_text = isset( $button['button_text'] ) ? esc_html( $button['button_text'] ) : '';
+            $is_current = isset( $button['is_current'] ) && $button['is_current'];
+            
+            if ( ! $product_id || ! $button_text ) {
+                continue;
+            }
+            
+            $linked_product = wc_get_product( $product_id );
+            
+            if ( ! $linked_product ) {
+                continue;
+            }
+            
+            $product_url = get_permalink( $product_id );
+            
+            // Sanitize button text to create a safe CSS class
+            $button_class = sanitize_html_class( strtolower( str_replace( array( ' ', '_' ), '-', $button_text ) ) );
+            
+            // Build CSS classes
+            $css_classes = array(
+                'wc-custom-product-button',
+                'button',
+                'alt',
+                'wc-button-' . $button_class
+            );
+            
+            // Add is-current class if this is the current product
+            if ( $is_current ) {
+                $css_classes[] = 'is-current';
+            }
+            
+            echo '<a href="' . esc_url( $product_url ) . '" class="' . esc_attr( implode( ' ', $css_classes ) ) . '">';
+            echo $button_text;
+            echo '</a>';
+        }
+        
+        echo '</div>'; // Close wc-custom-product-buttons
+        echo '</div>'; // Close wc-custom-product-buttons-wrapper
+    }
+    
+    /**
+     * Enqueue admin scripts
+     */
+    public function enqueue_admin_scripts( $hook ) {
+        global $post;
+        
+        // Only load on product edit pages
+        if ( ! in_array( $hook, array( 'post.php', 'post-new.php' ) ) ) {
+            return;
+        }
+        
+        if ( ! $post || $post->post_type !== 'product' ) {
+            return;
+        }
+        
+        $plugin_url = plugin_dir_url( __FILE__ );
+        $version = '1.5.1';
+        
+        // Enqueue WooCommerce product search
+        wp_enqueue_script( 'wc-enhanced-select' );
+        wp_enqueue_style( 'woocommerce_admin_styles' );
+        
+        // Enqueue custom admin CSS
+        wp_enqueue_style(
+            'wc-options-admin',
+            $plugin_url . 'assets/css/admin-buttons.css',
+            array(),
+            $version
+        );
+        
+        // Enqueue custom admin script
+        wp_enqueue_script(
+            'wc-options-admin',
+            $plugin_url . 'assets/js/admin-buttons.js',
+            array( 'jquery', 'wc-enhanced-select' ),
+            $version,
+            true
+        );
+        
+        // Localize script
+        wp_localize_script( 'wc-options-admin', 'wcOptionsAdmin', array(
+            'placeholder' => __( 'Buscar producto...', 'wc-options' ),
+        ) );
+    }
+    
+    /**
+     * Enqueue frontend styles
+     */
+    public function enqueue_frontend_styles() {
+        if ( ! is_product() ) {
+            return;
+        }
+        
+        $plugin_url = plugin_dir_url( __FILE__ );
+        $version = '1.5.0';
+        
+        wp_enqueue_style(
+            'wc-options-frontend',
+            $plugin_url . 'assets/css/frontend-buttons.css',
+            array(),
+            $version
+        );
     }
 }
 
