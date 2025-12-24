@@ -48,8 +48,8 @@ class WC_Invoice_PDF_Generator {
         // Add page
         $pdf->AddPage();
         
-        // Set font
-        $pdf->SetFont('helvetica', '', 10);
+        // Set font - DejaVu Sans (similar to Roboto, better TCPDF support)
+        $pdf->SetFont('dejavusans', '', 10);
         
         // Generate HTML content
         $html = $this->generate_invoice_html($order);
@@ -82,27 +82,43 @@ class WC_Invoice_PDF_Generator {
     private function generate_invoice_html($order) {
         $html = '';
         
-        // Header with logo and company info
-        $html .= '<table style="width: 100%; margin-bottom: 20px;">';
+        // Header with logo and company info - with background pattern
+        $pattern_path = WC_INVOICE_PDF_PLUGIN_DIR . 'assets/pattern.jpg';
+        $background_style = '';
+        if (file_exists($pattern_path)) {
+            $background_style = 'background-image:url(\'' . $pattern_path . '\'); background-size:150px; background-repeat:repeat;';
+        } else {
+            $background_style = 'background-color: #282828;';
+        }
+        
+        $html .= '<table style="width: 100%; margin-bottom: 20px; padding:15px; ' . $background_style . '">';
         $html .= '<tr>';
         
         // Logo
-        $logo_id = get_theme_mod('custom_logo');
-        if ($logo_id) {
-            $logo_url = wp_get_attachment_image_src($logo_id, 'full');
-            if ($logo_url) {
-                $html .= '<td style="width: 40%;">';
-                $html .= '<img src="' . esc_url($logo_url[0]) . '" style="max-width: 150px; max-height: 80px;">';
-                $html .= '</td>';
-            }
+        $logo_path = WC_INVOICE_PDF_PLUGIN_DIR . 'assets/logo.png';
+        if (file_exists($logo_path)) {
+            $html .= '<td style="width: 40%;">';
+            $html .= '<img src="' . $logo_path . '" style="max-width: 250px; max-height: 10%;">';
+            $html .= '</td>';
         } else {
-            $html .= '<td style="width: 40%;"><h1>' . get_bloginfo('name') . '</h1></td>';
+            // Fallback to theme logo
+            $logo_id = get_theme_mod('custom_logo');
+            if ($logo_id) {
+                $logo_url = wp_get_attachment_image_src($logo_id, 'full');
+                if ($logo_url) {
+                    $html .= '<td style="width: 40%;">';
+                    $html .= '<img src="' . esc_url($logo_url[0]) . '" style="max-width: 250px; max-height: 10%;">';
+                    $html .= '</td>';
+                }
+            } else {
+                $html .= '<td style="width: 40%;"><h1 style="color: #fff;">' . get_bloginfo('name') . '</h1></td>';
+            }
         }
         
         // Invoice info
         $html .= '<td style="width: 60%; text-align: right;">';
-        $html .= '<h2 style="color: #333; margin: 0 0 10px 0;">FACTURA</h2>';
-        $html .= '<p style="margin: 0; line-height: 1.6;">';
+        $html .= '<h2 style="color: #fff; margin: 0 0 5px 0; font-weight:700; text-transform:uppercase">FACTURA</h2>';
+        $html .= '<p style="margin: 0; line-height: 1.4; color: #fff;">';
         $html .= '<strong>Número:</strong> #' . $order->get_order_number() . '<br>';
         $html .= '<strong>Fecha:</strong> ' . $order->get_date_created()->date_i18n('d/m/Y') . '<br>';
         $html .= '<strong>Estado:</strong> ' . wc_get_order_status_name($order->get_status());
@@ -113,12 +129,12 @@ class WC_Invoice_PDF_Generator {
         
         // Billing and shipping addresses
         $html .= '<table style="width: 100%; margin-bottom: 20px; border-collapse: collapse;">';
-        $html .= '<tr>';
+        $html .= '<tr style="border:1px solid #ccc">';
         
         // Billing address
-        $html .= '<td style="width: 50%; padding: 10px; background-color: #f8f8f8; vertical-align: top;">';
-        $html .= '<h3 style="margin: 0 0 10px 0; color: #333;">Dirección de facturación</h3>';
-        $html .= '<p style="margin: 0; line-height: 1.6;">';
+        $html .= '<td style="width: 50%; padding: 10px; background-color: #f8f8f8; vertical-align: top; border-right:1px solid #ccc">';
+        $html .= '<h3 style="margin: 0 0 5px 0; color: #282828; text-transform:uppercase; font-weight:700;">Dirección de facturación</h3>';
+        $html .= '<p style="margin: 0; line-height: 1.4;">';
         $html .= $order->get_formatted_billing_address() ? $order->get_formatted_billing_address() : '-';
         if ($order->get_billing_email()) {
             $html .= '<br><strong>Email:</strong> ' . $order->get_billing_email();
@@ -130,9 +146,9 @@ class WC_Invoice_PDF_Generator {
         $html .= '</td>';
         
         // Shipping address
-        $html .= '<td style="width: 50%; padding: 10px; background-color: #f0f0f0; vertical-align: top;">';
-        $html .= '<h3 style="margin: 0 0 10px 0; color: #333;">Dirección de envío</h3>';
-        $html .= '<p style="margin: 0; line-height: 1.6;">';
+        $html .= '<td style="width: 50%; padding: 10px; background-color: #f8f8f8; vertical-align: top;">';
+        $html .= '<h3 style="margin: 0 0 10px 0; color: #282828; text-transform:uppercase; font-weight:700;">Dirección de envío</h3>';
+        $html .= '<p style="margin: 0; line-height: 1.4;">';
         $html .= $order->get_formatted_shipping_address() ? $order->get_formatted_shipping_address() : '-';
         $html .= '</p>';
         $html .= '</td>';
@@ -141,17 +157,17 @@ class WC_Invoice_PDF_Generator {
         $html .= '</table>';
         
         // Order items
-        $html .= '<h3 style="margin: 20px 0 10px 0; color: #333;">Productos</h3>';
+        $html .= '<h3 style="margin: 20px 0 10px 0; color: #282828;">Productos</h3>';
         $html .= '<table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">';
         
         // Table header
         $html .= '<thead>';
-        $html .= '<tr style="background-color: #333; color: #fff;">';
-        $html .= '<th style="padding: 10px; text-align: left;">Imagen</th>';
-        $html .= '<th style="padding: 10px; text-align: left;">Producto</th>';
-        $html .= '<th style="padding: 10px; text-align: center;">Cantidad</th>';
-        $html .= '<th style="padding: 10px; text-align: right;">Precio</th>';
-        $html .= '<th style="padding: 10px; text-align: right;">Total</th>';
+        $html .= '<tr style="background-color: #282828; color: #fff;">';
+        $html .= '<th style="padding: 8px; text-align: left; width: 150px;">Imagen</th>';
+        $html .= '<th style="padding: 8px; text-align: left;">Producto</th>';
+        $html .= '<th style="padding: 8px; text-align: center; width: 90px;">Cant.</th>';
+        $html .= '<th style="padding: 8px; text-align: center; width: 90px;">Precio</th>';
+        $html .= '<th style="padding: 8px; text-align: center; width: 90px;">Total</th>';
         $html .= '</tr>';
         $html .= '</thead>';
         
@@ -164,11 +180,12 @@ class WC_Invoice_PDF_Generator {
             $html .= '<tr style="border-bottom: 1px solid #ddd;">';
             
             // Product image
-            $html .= '<td style="padding: 10px; width: 80px;">';
+            $html .= '<td style="padding: 10px; width: 150px;">';
             if ($product && $product->get_image_id()) {
-                $image_url = wp_get_attachment_image_src($product->get_image_id(), 'thumbnail');
-                if ($image_url) {
-                    $html .= '<img src="' . esc_url($image_url[0]) . '" style="max-width: 60px; max-height: 60px;">';
+                $image_id = $product->get_image_id();
+                $image_path = get_attached_file($image_id);
+                if ($image_path && file_exists($image_path)) {
+                    $html .= '<img src="' . $image_path . '" style="max-width: 100%; max-height: 100%; border:1px solid #ccc">';
                 }
             }
             $html .= '</td>';
@@ -200,17 +217,17 @@ class WC_Invoice_PDF_Generator {
             $html .= '</td>';
             
             // Quantity
-            $html .= '<td style="padding: 10px; text-align: center; vertical-align: top;">';
+            $html .= '<td style="padding: 10px; text-align: center; vertical-align: top; width: 90px;">';
             $html .= $item->get_quantity();
             $html .= '</td>';
             
             // Price
-            $html .= '<td style="padding: 10px; text-align: right; vertical-align: top;">';
+            $html .= '<td style="padding: 10px; text-align: right; vertical-align: top; width: 90px;">';
             $html .= wc_price($order->get_item_subtotal($item, false, false));
             $html .= '</td>';
             
             // Total
-            $html .= '<td style="padding: 10px; text-align: right; vertical-align: top;">';
+            $html .= '<td style="padding: 10px; text-align: right; vertical-align: top; width: 90px;">';
             $html .= wc_price($order->get_line_subtotal($item, false, false));
             $html .= '</td>';
             
@@ -259,7 +276,7 @@ class WC_Invoice_PDF_Generator {
         }
         
         // Total
-        $html .= '<tr style="background-color: #333; color: #fff;">';
+        $html .= '<tr style="background-color: #c2448e; color: #fff;">';
         $html .= '<td style="padding: 10px; text-align: left;"><strong>TOTAL:</strong></td>';
         $html .= '<td style="padding: 10px; text-align: right;"><strong>' . wc_price($order->get_total()) . '</strong></td>';
         $html .= '</tr>';
@@ -285,7 +302,7 @@ class WC_Invoice_PDF_Generator {
         // Order meta data
         $order_meta = $order->get_meta_data();
         if (!empty($order_meta)) {
-            $html .= '<h3 style="margin: 20px 0 10px 0; color: #333;">Información adicional del pedido</h3>';
+            $html .= '<h3 style="margin: 20px 0 10px 0; color: #282828;">Información adicional del pedido</h3>';
             $html .= '<table style="width: 100%; border-collapse: collapse;">';
             
             foreach ($order_meta as $meta) {
@@ -305,7 +322,7 @@ class WC_Invoice_PDF_Generator {
         }
         
         // Footer
-        $html .= '<div style="margin-top: 30px; padding-top: 20px; border-top: 2px solid #333; text-align: center; color: #666; font-size: 9px;">';
+        $html .= '<div style="margin-top: 30px; padding-top: 20px; border-top: 2px solid #282828; text-align: center; color: #666; font-size: 9px;">';
         $html .= get_bloginfo('name') . ' - ' . get_bloginfo('description');
         if (get_bloginfo('admin_email')) {
             $html .= '<br>' . get_bloginfo('admin_email');
