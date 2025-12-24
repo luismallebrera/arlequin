@@ -1,0 +1,27 @@
+# .gitignore para WooCommerce Invoice PDF
+
+# Composer
+/vendor/
+composer.lock
+
+# TCPDF (se instalará via Composer)
+/lib/tcpdf/
+
+# Logs
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Temporary files
+*.tmp
+*.bak
+*.swp
+*~

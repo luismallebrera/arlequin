@@ -1,0 +1,14 @@
+/**
+ * Admin Styles for WooCommerce Invoice PDF
+ */
+
+/* Invoice action button in order list */
+.wc-action-button-download_invoice::after {
+    font-family: 'WooCommerce';
+    content: '\e026';
+    color: #999;
+}
+
+.wc-action-button-download_invoice:hover::after {
+    color: #333;
+}

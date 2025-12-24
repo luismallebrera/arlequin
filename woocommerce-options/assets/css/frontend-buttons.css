@@ -106,8 +106,3 @@ a.wc-custom-product-button.button.alt.is-current:after {
         text-align: center;
     }
 }
-
-/* Hide sod_select when wpcvs-terms (variation swatches) are present */
-.wpcvs-terms ~ .sod_select {
-    display: none !important;
-}
