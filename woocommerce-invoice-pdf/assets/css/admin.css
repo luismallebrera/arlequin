@@ -3,12 +3,14 @@
  */
 
 /* Invoice action button in order list */
-.wc-action-button-download_invoice::after {
+a.button.wc-action-button.wc-action-button-download_invoice.download_invoice:after {
     font-family: 'WooCommerce';
     content: '\e026';
-    color: #999;
+    color: #2171b1;
+    font-size: 18px;
+    margin-top: -2px !important;
 }
 
-.wc-action-button-download_invoice:hover::after {
-    color: #333;
+a.button.wc-action-button.wc-action-button-download_invoice.download_invoice:hover:after {
+    color: #135e96;
 }

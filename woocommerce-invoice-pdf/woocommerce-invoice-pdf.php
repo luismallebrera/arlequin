@@ -64,6 +64,10 @@ class WC_Invoice_PDF {
         add_filter('woocommerce_admin_order_actions', array($this, 'add_invoice_action'), 10, 2);
         add_action('admin_init', array($this, 'handle_invoice_download'));
         
+        // Add download invoice to order actions dropdown
+        add_filter('woocommerce_order_actions', array($this, 'add_invoice_to_order_actions'));
+        add_action('woocommerce_order_action_download_invoice_pdf', array($this, 'process_invoice_download_action'));
+        
         // Add invoice button to My Account orders
         add_filter('woocommerce_my_account_my_orders_actions', array($this, 'add_my_account_invoice_action'), 10, 2);
         add_action('template_redirect', array($this, 'handle_frontend_invoice_download'));
@@ -210,6 +214,22 @@ class WC_Invoice_PDF {
             wp_die(__('No tienes permisos para ver esta factura', 'wc-invoice-pdf'));
         }
         
+        $this->generate_and_download_invoice($order_id);
+    }
+    
+    /**
+     * Add invoice download to order actions dropdown
+     */
+    public function add_invoice_to_order_actions($actions) {
+        $actions['download_invoice_pdf'] = __('Descargar factura PDF', 'wc-invoice-pdf');
+        return $actions;
+    }
+    
+    /**
+     * Process invoice download from order actions dropdown
+     */
+    public function process_invoice_download_action($order) {
+        $order_id = $order->get_id();
         $this->generate_and_download_invoice($order_id);
     }
     

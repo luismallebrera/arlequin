@@ -1,5 +1,3 @@
-# Configuración de Composer para WooCommerce Invoice PDF
-
 {
     "name": "luismallebrera/woocommerce-invoice-pdf",
     "description": "Plugin de WooCommerce que genera facturas en PDF con todos los metadatos y las imágenes de productos",
